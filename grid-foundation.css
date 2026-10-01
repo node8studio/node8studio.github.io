@@ -1,0 +1,52 @@
+/* Site-wide spatial system. Keep the three grid families distinct. */
+:root{
+  --grid-frame-inset:6px;
+  --grid-chrome-inset:clamp(20px,2.1vw,40px);
+  --grid-content-inset:clamp(20px,4.3vw,72px);
+  --grid-content-columns:1fr minmax(0,1.7fr);
+  --grid-content-gap:clamp(30px,8vw,142px);
+  --grid-footer-inset:clamp(20px,2.8vw,40px);
+}
+
+/* Chrome: all page headers and image-hero copy. */
+.site-header{padding-inline:var(--grid-chrome-inset)}
+.site-header{display:grid;grid-template-columns:minmax(0,1fr) auto auto;justify-content:normal;column-gap:clamp(22px,3vw,42px)}
+.site-header .nav{justify-self:end}
+.site-header .nav a{font-weight:600;opacity:.62;transition:opacity 180ms ease}
+.site-header .nav a[aria-current=page]{font-weight:620;opacity:.86}
+.site-header .nav a:hover,.site-header .nav a:focus-visible{opacity:.86}
+.hero-content{left:var(--grid-chrome-inset);right:var(--grid-chrome-inset)}
+
+/* Content: editorial labels and copy use one repeated column system. */
+.section{padding-inline:var(--grid-content-inset)}
+.intro{grid-template-columns:var(--grid-content-columns);gap:var(--grid-content-gap)}
+
+/* Archive: heading follows chrome; intentionally edge-led cards follow frame. */
+.archive-header{padding-inline:var(--grid-chrome-inset)}
+.archive-grid{padding-inline:var(--grid-frame-inset)}
+
+/* Footer is intentionally a framed module, with one internal text inset. */
+.node8-footer{padding:var(--grid-frame-inset)}
+.node8-footer-contact,.node8-footer-info{padding-inline:var(--grid-footer-inset)}
+.node8-footer-media,.node8-footer-tagline{right:var(--grid-footer-inset)}
+
+@media(max-width:720px){
+  .site-header{padding-inline:20px;grid-template-columns:minmax(0,1fr) auto;column-gap:0}
+  .hero-content{left:20px;right:20px}
+  .section{padding-inline:20px}
+  .intro{grid-template-columns:1fr;gap:28px}
+  .archive-header{padding-inline:20px}
+  .archive-grid{padding-inline:var(--grid-frame-inset)}
+  .node8-footer-contact,.node8-footer-info{padding-inline:20px}
+}
+
+/* Footer title has a distinct middle-width scale so it never crops inside the frame. */
+@media(min-width:721px) and (max-width:1000px){
+  .node8-footer-title{font-size:clamp(64px,9.45vw,92px);line-height:1.05}
+}
+@media(min-width:1001px) and (max-width:1200px){
+  .node8-footer-title{font-size:clamp(94px,9.45vw,112px);line-height:1.07}
+}
+@media(min-width:1201px){
+  .node8-footer-title{font-size:clamp(115px,calc((100vw - 80px)*.102),184px)}
+}

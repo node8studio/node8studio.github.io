@@ -1,0 +1,4 @@
+/* One shared bottom inset moves the entire home-hero copy group together. */
+:root{--home-hero-copy-bottom:clamp(20px,2vw,28px)}
+.hero:not(.about-services-hero) .hero-content{bottom:var(--home-hero-copy-bottom)}
+@media(max-width:720px){.hero:not(.about-services-hero) .hero-content{bottom:16px}}

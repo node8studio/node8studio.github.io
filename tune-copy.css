@@ -1,0 +1,4 @@
+.tune-panel textarea{width:100%;min-height:72px;padding:8px;border:1px solid #d5d5d5;border-radius:8px;background:#fff;color:#161616;font:inherit;line-height:1.35;resize:vertical}
+
+body.tune-mode .tune-target{cursor:text!important}
+body.tune-mode [data-tune-id][data-tune-editing="true"]{outline:1px solid var(--tune-accent);outline-offset:4px;cursor:text}

@@ -1,0 +1,33 @@
+/* Values measured from the current live Node8 site at a 1280px desktop viewport. */
+@media (min-width:721px){
+  .site-header{padding:22px 30px}
+  .nav{gap:42px;font-size:18px;letter-spacing:-.54px}
+  .brand{font-size:20px;letter-spacing:-.7px}
+  .hero-content{left:30px;right:30px}
+  .hero h1{font-size:111.478px;line-height:122.626px;letter-spacing:-5.574px;font-weight:600}
+  .hero-note{font-size:19px;line-height:26.6px;letter-spacing:-.57px}
+  .eyebrow{font-size:14px;line-height:19.6px;letter-spacing:-.42px}
+  .intro{grid-template-columns:1fr 1.8fr}
+  .intro-copy{font-size:47px;line-height:61.1px;letter-spacing:-2.35px;font-weight:600}
+  .home-intro{--home-intro-label:clamp(180px,15vw,236px);grid-template-columns:var(--home-intro-label) minmax(0,1fr);gap:clamp(24px,3vw,48px)}
+  .home-intro .intro-copy{max-width:none;font-size:38px;line-height:1.08;letter-spacing:-1.9px;white-space:nowrap}
+  .intro-subcopy{margin:12px 0 0;font-size:16px;line-height:1.5;letter-spacing:-.48px;font-weight:500;color:var(--ink)}
+  .about-intro .about-intro-body{margin:12px 0 0}
+  .display-title{font-size:62px;line-height:1;letter-spacing:-3.1px}
+  .project-name{font-size:40px;line-height:40.8px;letter-spacing:-1.6px;font-weight:700}
+  .contact h2{font-size:115.23px;line-height:126.753px;letter-spacing:-5.762px;font-weight:600}
+}
+@media (max-width:720px){
+  .site-header{padding:18px 20px}
+  .hero-content{left:20px;right:20px}
+  .hero h1{font-size:56px;line-height:61px;letter-spacing:-2.8px}
+  .hero-note{font-size:16px;line-height:22px;letter-spacing:-.48px}
+  .home-intro .intro-copy{font-size:clamp(30px,8.4vw,38px);line-height:1.1;letter-spacing:-1.5px;white-space:normal}
+  .intro-subcopy{margin-top:11px;font-size:14px;line-height:1.55;letter-spacing:-.35px}
+  .about-intro .about-intro-body{margin-top:11px}
+}
+
+@media (min-width:721px) and (max-width:1000px){
+  .home-intro{grid-template-columns:clamp(150px,22vw,190px) minmax(0,1fr);gap:28px}
+  .home-intro .intro-copy{white-space:normal}
+}

@@ -1,0 +1,61 @@
+/* Shared project-detail template. Content fields map directly to the future CMS. */
+.project-detail{background:#fff}
+.project-detail .site-header{color:#fff}
+.detail-hero{position:relative;min-height:calc(100svh - 12px);margin:6px;overflow:hidden;border-radius:12px;background:#171717;color:#fff}
+.detail-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.02) 42%,rgba(0,0,0,.58))}
+.detail-hero-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.detail-hero-title{position:absolute;z-index:2;right:clamp(20px,1.7vw,24px);bottom:18px;left:clamp(20px,1.7vw,24px);margin:0;font-size:clamp(64px,7.23vw,104px);line-height:1;letter-spacing:-.065em;font-weight:600}
+.detail-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,4.6vw,66px);padding:clamp(126px,9vw,150px) var(--grid-footer-inset) clamp(180px,18vw,270px)}
+.detail-korean-title{max-width:670px;margin:0;font-size:clamp(38px,3.82vw,55px);line-height:1.14;letter-spacing:-.06em;font-weight:600}
+.detail-information{width:min(100%,640px);justify-self:end}
+.detail-facts{display:grid;gap:34px;margin:0;font-size:22px;line-height:1.4;letter-spacing:-.03em}
+.detail-facts>div{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:12px}
+.detail-facts>div::before{content:"";grid-column:2;grid-row:1;width:100%;height:1px;background:#e7e7e7}
+.detail-facts dt,.detail-facts dd{margin:0}
+.detail-facts dt{grid-column:1;grid-row:1;color:#777;text-align:left;font-weight:400}
+.detail-facts dd{grid-column:3;grid-row:1;color:#171717;text-align:right;font-weight:400}
+.detail-facts .detail-category dd{font-size:18px;font-weight:500;white-space:nowrap;padding:6px 12px;border-radius:999px;background:#f2f2f2}
+.detail-summary{max-width:640px;margin:28px 0 0;color:#171717;font-size:22px;line-height:1.4;letter-spacing:-.02em}
+.detail-summary+p{margin-top:8px}
+.detail-content{--detail-object-gap:calc(var(--grid-frame-inset) + 2px);--detail-media-gap:12px;display:grid;gap:var(--detail-object-gap);padding:0 var(--grid-footer-inset) clamp(140px,16vw,240px)}
+.detail-content-block,.detail-copy-block{min-width:0;margin-bottom:calc(var(--block-spacing-after,var(--detail-object-gap)) - var(--detail-object-gap))}
+.detail-film-frame{position:relative;overflow:hidden;aspect-ratio:16/9;border-radius:16px;background:#141414}
+.detail-film-trigger{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:none;color:#fff;cursor:pointer}
+.detail-film-trigger img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.detail-film-trigger::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.12);transition:background .25s ease}
+.detail-film-trigger:hover img,.detail-film-trigger:focus-visible img{transform:scale(1.025)}
+.detail-film-trigger:hover::after,.detail-film-trigger:focus-visible::after{background:rgba(0,0,0,.02)}
+.detail-film-trigger:focus-visible{outline:2px solid #fff;outline-offset:-5px}
+.detail-film-play{position:absolute;z-index:1;top:50%;left:50%;display:grid;place-items:center;width:62px;height:44px;border-radius:10px;background:rgba(22,22,22,.78);transform:translate(-50%,-50%);font-size:18px;transition:transform .25s ease,background .25s ease}
+.detail-film-trigger:hover .detail-film-play,.detail-film-trigger:focus-visible .detail-film-play{background:rgba(22,22,22,.96);transform:translate(-50%,-50%) scale(1.06)}
+.detail-film-embed{position:absolute;inset:0;width:100%;height:100%;border:0}
+.detail-media-grid{display:grid;gap:var(--detail-media-gap)}
+.detail-media-grid[data-layout="two-landscape"],.detail-media-grid[data-layout="two-portrait"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.detail-media-grid[data-layout="mixed-landscape-portrait"]{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);align-items:start}
+.detail-media{margin:0;overflow:hidden;border-radius:16px;background:#161616}
+.detail-media img{display:block;width:100%;height:100%;object-fit:cover}
+.detail-media[data-aspect="16x9"]{aspect-ratio:16/9}
+.detail-media[data-aspect="3x4"]{aspect-ratio:3/4}
+.detail-media[data-aspect="4x5"]{aspect-ratio:4/5}
+.detail-copy-block{display:grid;grid-template-columns:1fr minmax(0,1fr);gap:clamp(40px,4.6vw,66px);padding-block:clamp(12px,2vw,30px)}
+.detail-copy-block h3{margin:0;color:#171717;font-size:clamp(28px,3vw,44px);line-height:1.05;letter-spacing:-.06em}
+.detail-copy-block p{margin:0;max-width:640px;color:#353535;font-size:22px;line-height:1.4;letter-spacing:-.02em}
+.cms-rich-copy{display:block;grid-column:1/-1;width:100%}.cms-rich-copy h2{margin:0 0:.35em;color:#171717;font-size:clamp(34px,4vw,58px);line-height:1.04;letter-spacing:-.06em}.cms-rich-copy h3{margin:0 0:.5em;font-size:clamp(24px,2.4vw,38px)}.cms-rich-copy p{max-width:none}.cms-rich-copy ul,.cms-rich-copy ol{margin:0;padding-left:1.25em;color:#353535;font-size:22px;line-height:1.4}
+@media(max-width:720px){
+  .detail-hero{min-height:calc(100svh - 12px)}
+  .detail-hero-title{right:20px;bottom:28px;left:20px;font-size:clamp(52px,14vw,68px);line-height:.96}
+  .detail-intro{grid-template-columns:1fr;gap:68px;padding:92px 20px 130px}
+  .detail-korean-title{font-size:clamp(37px,10.5vw,48px)}
+  .detail-facts{gap:24px;font-size:18px}
+  .detail-facts>div{column-gap:10px}
+  .detail-facts .detail-category dd{font-size:16px;padding:5px 10px}
+  .detail-summary{margin-top:22px;font-size:18px;line-height:1.48}
+  .detail-content{gap:var(--detail-object-gap);padding:0 6px 116px}
+  .detail-film-frame{border-radius:14px}
+  .detail-film-play{width:54px;height:40px;font-size:16px}
+  .detail-media-grid{gap:var(--detail-media-gap)}
+  .detail-media-grid[data-layout="two-landscape"],.detail-media-grid[data-layout="two-portrait"],.detail-media-grid[data-layout="mixed-landscape-portrait"]{grid-template-columns:1fr;gap:var(--detail-media-gap)}
+  .detail-media{border-radius:14px}
+  .detail-copy-block{grid-template-columns:1fr;gap:24px;padding:12px 14px}
+  .detail-copy-block p{font-size:18px;line-height:1.48}
+}
