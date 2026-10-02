@@ -50,3 +50,10 @@
 @media(min-width:1201px){
   .node8-footer-title{font-size:clamp(115px,calc((100vw - 80px)*.102),184px)}
 }
+
+/* Mobile menu: KakaoTalk consult under the page links, set apart by a hairline. Desktop header shows the pill instead. */
+.nav-contact{display:none}
+@media(max-width:720px){
+  .nav.is-open .nav-contact{display:block;align-self:stretch;padding-top:16px;border-top:1px solid rgba(255,255,255,.22)}
+  .site-header.on-light .nav.is-open .nav-contact{border-top-color:rgba(19,19,19,.16)}
+}
