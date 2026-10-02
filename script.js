@@ -26,3 +26,12 @@ if(aboutDiptych&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
   addEventListener('scroll',requestDiptych,{passive:true});addEventListener('resize',requestDiptych);requestDiptych();
 }
 addEventListener('load',()=>{const rail=document.querySelector('.recent-rail');const card=rail?.querySelector('.recent-card');if(rail&&card){requestAnimationFrame(()=>{const width=card.getBoundingClientRect().width;rail.scrollLeft=width+16-(rail.clientWidth-width)/2})}},{once:true});
+const heroCopy=document.querySelector('[data-tune-id="hero-title"]')?.closest('.hero-content');
+if(heroCopy&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  // Home hero: as the page scrolls, the whole text group sinks into the hero frame at 40% of the scroll speed.
+  const hero=heroCopy.closest('.hero');
+  let heroFrame;
+  const updateHero=()=>{heroFrame=undefined;const y=Math.min(Math.max(scrollY,0),hero.offsetTop+hero.offsetHeight);heroCopy.style.transform=y?`translate3d(0,${(y*.4).toFixed(1)}px,0)`:''};
+  const requestHero=()=>{if(!heroFrame)heroFrame=requestAnimationFrame(updateHero)};
+  addEventListener('scroll',requestHero,{passive:true});addEventListener('resize',requestHero);requestHero();
+}

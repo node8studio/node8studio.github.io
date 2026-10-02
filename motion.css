@@ -1,0 +1,15 @@
+/* Motion standard (bundle 5, confirmed by the director 2026-10-02): one curve for the whole site,
+   elements enter in turn, fast start and a long soft stop. Only transform and opacity move. */
+:root{--node8-ease:cubic-bezier(.16,1,.3,1)}
+@keyframes node8-rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+/* Home hero text: Korean line, name, then the mood line, once on load. The video itself is left as it is. */
+.hero [data-tune-id="hero-eyebrow"],.hero [data-tune-id="hero-title"],.hero [data-tune-id="hero-note"]{animation:node8-rise 1.1s var(--node8-ease) both}
+.hero [data-tune-id="hero-title"]{animation-delay:.11s}
+.hero [data-tune-id="hero-note"]{animation-delay:.22s}
+/* Home hero text group sinks into the frame as the page scrolls; script.js sets the transform. */
+.hero:not(.about-services-hero) .hero-content{will-change:transform}
+
+@media (prefers-reduced-motion:reduce){
+  .hero [data-tune-id="hero-eyebrow"],.hero [data-tune-id="hero-title"],.hero [data-tune-id="hero-note"]{animation:none}
+}
