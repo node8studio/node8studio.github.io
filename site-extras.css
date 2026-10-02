@@ -245,6 +245,11 @@ main{--about-content-inset:var(--grid-content-inset)}
   .site-header.on-light .nav.is-open .nav-contact{border-top-color:rgba(19,19,19,.16)}
 }
 
+/* Footer: privacy policy link, set apart from the plain legal lines. */
+.node8-footer-legal.node8-footer-privacy{margin-top:6px}
+.node8-footer-privacy a{color:#f2f2f2;font-weight:600}
+.node8-footer-privacy a:hover,.node8-footer-privacy a:focus-visible{text-decoration:underline;text-underline-offset:3px}
+
 /* brand.css */
 .brand{display:flex;align-items:center;line-height:0}
 .brand img{display:block;width:150px;height:28px;object-fit:contain}
