@@ -1,0 +1,19 @@
+/* Home M3 (bundle 5): "Heart first, then technology. Bold, original stories." as a centred title card
+   between the numbers and the work slider. Sizes come from type-scale.css: the English lines use Title and
+   shrink only when a line would not fit the column; the Korean line uses Sub. The two English lines, the
+   Korean line and the link rise in turn (motion.css). Phone keeps three English lines (tune-br-m). */
+.home-intro{display:grid;grid-template-columns:minmax(0,1fr);gap:0;justify-items:center;align-content:center;text-align:center;min-height:min(78vh,820px);padding-block:clamp(96px,10vw,168px)}
+.home-intro>div{display:grid;justify-items:center}
+.home-intro .intro-copy{margin:0;max-width:none;white-space:nowrap;font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 12.5));line-height:1.04;letter-spacing:-.045em;font-weight:600}
+.home-intro .intro-line{display:block}
+.home-intro .intro-subcopy{margin:30px 0 0;font-size:var(--type-sub);line-height:1.55;font-weight:400;color:#3c3c39}
+/* The About link is a violet outline pill (director 2026-10-03); it fills on hover and the arrow steps up-right. */
+.home-intro .under-link{gap:10px;margin-top:40px;padding:13px 24px;border:1px solid var(--node8-violet);border-radius:999px;color:var(--node8-violet);font-weight:500;letter-spacing:-.01em;transition:background-color .6s var(--node8-ease),color .6s var(--node8-ease)}
+.home-intro .under-link span{display:inline-block;transition:transform .6s var(--node8-ease)}
+.home-intro .under-link:hover{gap:10px;background:var(--node8-violet);color:#fff}
+.home-intro .under-link:hover span{transform:translate(3px,-3px)}
+.home-intro .under-link:focus-visible{outline:2px solid var(--node8-violet);outline-offset:3px}
+@media(max-width:720px){
+  .home-intro{min-height:auto;padding-block:120px}
+  .home-intro .intro-copy{font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 9.6))}
+}

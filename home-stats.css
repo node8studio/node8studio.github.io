@@ -1,0 +1,28 @@
+/* Home M2 (bundle 5): title, three numbers and the brands we have worked with, between the hero and the intro.
+   Sizes come from type-scale.css. Numbers count up and the logo row flows (script.js); the rest rises once (motion.css). */
+.home-stats{display:grid;gap:clamp(40px,4.4vw,64px);padding-top:clamp(96px,10vw,168px);padding-bottom:clamp(24px,4vw,64px)}
+.home-stats-head{display:grid;gap:22px}
+.home-stats .label{font-size:var(--type-label)}
+.home-stats-title{margin:0;font-size:var(--type-statement);line-height:1.22;letter-spacing:-.035em;font-weight:600}
+.home-stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,44px)}
+.home-stat{display:grid;align-content:start;gap:12px;padding-top:22px;border-top:1px solid var(--line);min-width:0}
+.home-stat-name{margin:0;font-size:var(--type-sub);font-weight:500;letter-spacing:-.015em}
+.home-stat-number{margin:0;font-family:'Libre Caslon Display',Georgia,'Times New Roman',serif;font-weight:400;font-size:var(--type-number);line-height:.95;white-space:nowrap}
+.home-stat-plus{font-size:.5em;vertical-align:.62em;margin-left:.04em}
+.home-stat-text{margin:0;color:#3c3c39;font-size:var(--type-sub);line-height:1.55;letter-spacing:-.02em}
+.home-logos{margin-inline:calc(-1 * var(--pad));overflow:hidden;touch-action:pan-y;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.home-logos-track{display:flex;align-items:center;gap:clamp(4px,1vw,16px);width:max-content;will-change:transform}
+/* Logos keep their own colours. The one under the mouse (or a finger) grows a little and the rest step back. */
+.home-logos img{display:block;height:clamp(52px,4.8vw,68px);width:auto;transition:opacity .6s var(--node8-ease),transform .6s var(--node8-ease);user-select:none;-webkit-user-drag:none}
+.home-logos-track:has(img:hover) img:not(:hover),.home-logos-track.has-press img:not(.is-pressed){opacity:.28}
+.home-logos img:hover,.home-logos img.is-pressed{transform:scale(1.08)}
+@media(max-width:720px){
+  .home-stats{padding-top:72px;padding-bottom:24px;gap:36px}
+  .home-stats-grid{grid-template-columns:minmax(0,1fr);gap:0}
+  .home-stat{grid-template-columns:minmax(0,44%) minmax(0,1fr);column-gap:16px;row-gap:4px;padding-block:20px;align-items:end}
+  .home-stat:last-child{border-bottom:1px solid var(--line)}
+  .home-stat-number{grid-column:1;grid-row:1 / span 2}
+  .home-stat-name{grid-column:2;grid-row:1}
+  .home-stat-text{grid-column:2;grid-row:2}
+  .home-logos img{height:46px}
+}

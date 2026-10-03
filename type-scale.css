@@ -1,0 +1,8 @@
+/* Type scale (bundle 5, director 2026-10-03): every section picks its sizes from these six steps.
+   Changing one step resizes everything that uses it. Display stays on the tuned hero and footer titles.
+   PC ≥1001px, tablet 721–1000px, phone ≤720px. Sections move onto the scale as each one is reworked.
+   Statement is the Korean big title: 0.8 × Title, so Hangul (about 0.9 of the font size tall) stands as tall
+   as the English capitals of a Title line (0.71). Phone stays 30px because the English card there shrinks to fit. */
+:root{--type-title:72px;--type-statement:58px;--type-number:104px;--type-sub:20px;--type-label:16px}
+@media(max-width:1000px){:root{--type-title:56px;--type-statement:45px;--type-number:84px;--type-sub:18px;--type-label:15px}}
+@media(max-width:720px){:root{--type-title:40px;--type-statement:30px;--type-number:64px;--type-sub:17px;--type-label:15px}}

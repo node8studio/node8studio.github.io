@@ -41,6 +41,8 @@
 @font-face{font-family:'Geist';font-style:normal;font-weight:700;font-display:swap;src:url(assets/fonts/geist-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
 /* latin */
 @font-face{font-family:'Geist';font-style:normal;font-weight:700;font-display:swap;src:url(assets/fonts/geist-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+/* Libre Caslon Display (SIL OFL, assets/fonts/OFL-LibreCaslonDisplay.txt): numbers only, home M2. */
+@font-face{font-family:'Libre Caslon Display';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/libre-caslon-display-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 
 /* reference-tuning.css */
 /* Values measured from the current live Node8 site at a 1280px desktop viewport. */
@@ -251,6 +253,8 @@ main{--about-content-inset:var(--grid-content-inset)}
 .node8-footer-privacy a:hover,.node8-footer-privacy a:focus-visible{text-decoration:underline;text-underline-offset:3px}
 
 /* brand.css */
+/* Site point colour (director 2026-10-03): violet, the value from the earlier Framer site. */
+:root{--node8-violet:#8a47cc}
 .brand{display:flex;align-items:center;line-height:0}
 .brand img{display:block;width:150px;height:28px;object-fit:contain}
 
@@ -261,6 +265,67 @@ main{--about-content-inset:var(--grid-content-inset)}
 @media(max-width:720px){.hero:not(.about-services-hero) .hero-content{bottom:16px}}
 /* The big title sits at 88% so the reel shows through a little (director, 2026-10-02). */
 .hero:not(.about-services-hero) [data-tune-id="hero-title"]{color:rgb(255 255 255/.88)}
+
+/* type-scale.css */
+/* Type scale (bundle 5, director 2026-10-03): every section picks its sizes from these six steps.
+   Changing one step resizes everything that uses it. Display stays on the tuned hero and footer titles.
+   PC ≥1001px, tablet 721–1000px, phone ≤720px. Sections move onto the scale as each one is reworked.
+   Statement is the Korean big title: 0.8 × Title, so Hangul (about 0.9 of the font size tall) stands as tall
+   as the English capitals of a Title line (0.71). Phone stays 30px because the English card there shrinks to fit. */
+:root{--type-title:72px;--type-statement:58px;--type-number:104px;--type-sub:20px;--type-label:16px}
+@media(max-width:1000px){:root{--type-title:56px;--type-statement:45px;--type-number:84px;--type-sub:18px;--type-label:15px}}
+@media(max-width:720px){:root{--type-title:40px;--type-statement:30px;--type-number:64px;--type-sub:17px;--type-label:15px}}
+
+/* home-stats.css */
+/* Home M2 (bundle 5): title, three numbers and the brands we have worked with, between the hero and the intro.
+   Sizes come from type-scale.css. Numbers count up and the logo row flows (script.js); the rest rises once (motion.css). */
+.home-stats{display:grid;gap:clamp(40px,4.4vw,64px);padding-top:clamp(96px,10vw,168px);padding-bottom:clamp(24px,4vw,64px)}
+.home-stats-head{display:grid;gap:22px}
+.home-stats .label{font-size:var(--type-label)}
+.home-stats-title{margin:0;font-size:var(--type-statement);line-height:1.22;letter-spacing:-.035em;font-weight:600}
+.home-stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,44px)}
+.home-stat{display:grid;align-content:start;gap:12px;padding-top:22px;border-top:1px solid var(--line);min-width:0}
+.home-stat-name{margin:0;font-size:var(--type-sub);font-weight:500;letter-spacing:-.015em}
+.home-stat-number{margin:0;font-family:'Libre Caslon Display',Georgia,'Times New Roman',serif;font-weight:400;font-size:var(--type-number);line-height:.95;white-space:nowrap}
+.home-stat-plus{font-size:.5em;vertical-align:.62em;margin-left:.04em}
+.home-stat-text{margin:0;color:#3c3c39;font-size:var(--type-sub);line-height:1.55;letter-spacing:-.02em}
+.home-logos{margin-inline:calc(-1 * var(--pad));overflow:hidden;touch-action:pan-y;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.home-logos-track{display:flex;align-items:center;gap:clamp(4px,1vw,16px);width:max-content;will-change:transform}
+/* Logos keep their own colours. The one under the mouse (or a finger) grows a little and the rest step back. */
+.home-logos img{display:block;height:clamp(52px,4.8vw,68px);width:auto;transition:opacity .6s var(--node8-ease),transform .6s var(--node8-ease);user-select:none;-webkit-user-drag:none}
+.home-logos-track:has(img:hover) img:not(:hover),.home-logos-track.has-press img:not(.is-pressed){opacity:.28}
+.home-logos img:hover,.home-logos img.is-pressed{transform:scale(1.08)}
+@media(max-width:720px){
+  .home-stats{padding-top:72px;padding-bottom:24px;gap:36px}
+  .home-stats-grid{grid-template-columns:minmax(0,1fr);gap:0}
+  .home-stat{grid-template-columns:minmax(0,44%) minmax(0,1fr);column-gap:16px;row-gap:4px;padding-block:20px;align-items:end}
+  .home-stat:last-child{border-bottom:1px solid var(--line)}
+  .home-stat-number{grid-column:1;grid-row:1 / span 2}
+  .home-stat-name{grid-column:2;grid-row:1}
+  .home-stat-text{grid-column:2;grid-row:2}
+  .home-logos img{height:46px}
+}
+
+/* home-intro.css */
+/* Home M3 (bundle 5): "Heart first, then technology. Bold, original stories." as a centred title card
+   between the numbers and the work slider. Sizes come from type-scale.css: the English lines use Title and
+   shrink only when a line would not fit the column; the Korean line uses Sub. The two English lines, the
+   Korean line and the link rise in turn (motion.css). Phone keeps three English lines (tune-br-m). */
+.home-intro{display:grid;grid-template-columns:minmax(0,1fr);gap:0;justify-items:center;align-content:center;text-align:center;min-height:min(78vh,820px);padding-block:clamp(96px,10vw,168px)}
+.home-intro>div{display:grid;justify-items:center}
+.home-intro .intro-copy{margin:0;max-width:none;white-space:nowrap;font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 12.5));line-height:1.04;letter-spacing:-.045em;font-weight:600}
+.home-intro .intro-line{display:block}
+.home-intro .intro-subcopy{margin:30px 0 0;font-size:var(--type-sub);line-height:1.55;font-weight:400;color:#3c3c39}
+/* The About link is a violet outline pill (director 2026-10-03); it fills on hover and the arrow steps up-right. */
+.home-intro .under-link{gap:10px;margin-top:40px;padding:13px 24px;border:1px solid var(--node8-violet);border-radius:999px;color:var(--node8-violet);font-weight:500;letter-spacing:-.01em;transition:background-color .6s var(--node8-ease),color .6s var(--node8-ease)}
+.home-intro .under-link span{display:inline-block;transition:transform .6s var(--node8-ease)}
+.home-intro .under-link:hover{gap:10px;background:var(--node8-violet);color:#fff}
+.home-intro .under-link:hover span{transform:translate(3px,-3px)}
+.home-intro .under-link:focus-visible{outline:2px solid var(--node8-violet);outline-offset:3px}
+@media(max-width:720px){
+  .home-intro{min-height:auto;padding-block:120px}
+  .home-intro .intro-copy{font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 9.6))}
+}
 
 /* motion.css */
 /* Motion standard (bundle 5, confirmed by the director 2026-10-02): one curve for the whole site,
@@ -275,6 +340,11 @@ main{--about-content-inset:var(--grid-content-inset)}
 /* Home hero text group sinks into the frame as the page scrolls; script.js sets the transform. */
 .hero:not(.about-services-hero) .hero-content{will-change:transform}
 
+/* Sections: children marked data-rise come up in turn when their data-rise-group first comes into view.
+   script.js adds rise-ready only to groups the visitor has not seen yet, so nothing is hidden without the script. */
+.rise-ready [data-rise]{opacity:0;transform:translateY(28px)}
+.rise-ready.rise-in [data-rise]{opacity:1;transform:none;transition:opacity 1.1s var(--node8-ease),transform 1.1s var(--node8-ease);transition-delay:calc(var(--rise-i,0) * .11s)}
+
 @media (prefers-reduced-motion:reduce){
   .hero [data-tune-id="hero-eyebrow"],.hero [data-tune-id="hero-title"],.hero [data-tune-id="hero-note"]{animation:none}
 }
@@ -286,10 +356,6 @@ main{--about-content-inset:var(--grid-content-inset)}
 :root:not(.node8-tuning) [data-tune-id="hero-eyebrow"]{translate:6px 14px!important;font-size:17px!important;letter-spacing:-0.34px!important}
 :root:not(.node8-tuning) [data-tune-id="hero-title"]{font-size:145px!important;letter-spacing:-4.3px!important;line-height:0.87!important}
 :root:not(.node8-tuning) [data-tune-id="hero-note"]{translate:-29px 0px!important}
-:root:not(.node8-tuning) [data-tune-id="intro-label"]{font-size:16px!important;font-weight:400!important;letter-spacing:-0.6px!important}
-:root:not(.node8-tuning) [data-tune-id="intro-copy"]{font-size:min(44px, calc(44 * var(--tune-fit)))!important;letter-spacing:max(-1.9px, calc(-1.9 * var(--tune-fit)))!important}
-[data-tune-id="intro-copy"]{--tune-fit:calc((100vw - 2 * clamp(20px, 4.3vw, 72px) - clamp(30px, 8vw, 142px)) * 17 / 27 / 1028.81)}
-:root:not(.node8-tuning) [data-tune-id="intro-subcopy"]{font-size:20px!important;font-weight:400!important}
 :root:not(.node8-tuning) [data-tune-id="recent-label"]{font-size:16px!important;font-weight:400!important;letter-spacing:-0.2px!important}
 :root:not(.node8-tuning) [data-tune-id="recent-title"]{font-size:72px!important;font-weight:600!important}
 :root:not(.node8-tuning) [data-tune-id="footer-title"]{font-size:min(198px, calc(198 * var(--tune-fit)))!important;letter-spacing:max(-8.2px, calc(-8.2 * var(--tune-fit)))!important}

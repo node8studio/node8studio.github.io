@@ -1,2 +1,4 @@
+/* Site point colour (director 2026-10-03): violet, the value from the earlier Framer site. */
+:root{--node8-violet:#8a47cc}
 .brand{display:flex;align-items:center;line-height:0}
 .brand img{display:block;width:150px;height:28px;object-fit:contain}

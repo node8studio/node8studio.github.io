@@ -10,6 +10,11 @@
 /* Home hero text group sinks into the frame as the page scrolls; script.js sets the transform. */
 .hero:not(.about-services-hero) .hero-content{will-change:transform}
 
+/* Sections: children marked data-rise come up in turn when their data-rise-group first comes into view.
+   script.js adds rise-ready only to groups the visitor has not seen yet, so nothing is hidden without the script. */
+.rise-ready [data-rise]{opacity:0;transform:translateY(28px)}
+.rise-ready.rise-in [data-rise]{opacity:1;transform:none;transition:opacity 1.1s var(--node8-ease),transform 1.1s var(--node8-ease);transition-delay:calc(var(--rise-i,0) * .11s)}
+
 @media (prefers-reduced-motion:reduce){
   .hero [data-tune-id="hero-eyebrow"],.hero [data-tune-id="hero-title"],.hero [data-tune-id="hero-note"]{animation:none}
 }
