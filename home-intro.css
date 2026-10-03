@@ -14,6 +14,6 @@
 .home-intro .under-link:hover span{transform:translate(3px,-3px)}
 .home-intro .under-link:focus-visible{outline:2px solid var(--node8-violet);outline-offset:3px}
 @media(max-width:720px){
-  .home-intro{min-height:auto;padding-block:120px}
+  .home-intro{min-height:auto;padding-block:120px 80px}
   .home-intro .intro-copy{font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 9.6))}
 }

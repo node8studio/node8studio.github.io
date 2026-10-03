@@ -1,173 +1,119 @@
+// Home M4 (bundle 5, director 2026-10-03): Recent Projects as a 3D card stack (see recent-stack.css).
+// data-slot on each card: 0 middle, ±1 and ±2 either side, ±3 waiting out of sight on the side it enters from.
+// Side cards bring themselves to the middle when clicked; drag or swipe, and ←/→ while the stack is on screen, also
+// move it. The middle card links to its project. Autoplay every 7 s with a pause button and a violet time line;
+// it waits while the stack is off screen or the tab is hidden, and is off for visitors who reduce motion.
 const initializeRecentCarousel=()=>{
-  const rail=document.querySelector('.recent-rail')
-  if(!rail||rail.dataset.carouselInitialized==='true')return
-  const originals=[...rail.querySelectorAll('.recent-card')]
-  if(originals.length<2)return
+  const rail=document.querySelector('.recent-projects .recent-rail')
+  if(!rail)return
+  const cards=[...rail.querySelectorAll('.recent-card')]
+  if(cards.length<2)return
+  // The CMS script may redraw the cards after the snapshot; start again only when the cards are new.
+  if(cards.every(card=>card.dataset.slot!==undefined)&&rail.querySelector('.recent-hud'))return
+  rail.__stackAbort?.abort()
+  const abort=new AbortController(),signal=abort.signal
+  rail.__stackAbort=abort
 
-  rail.dataset.carouselInitialized='true'
-  const pagination=document.querySelector('.recent-pagination')
-  const lastClone=originals.at(-1).cloneNode(true)
-  const firstClone=originals[0].cloneNode(true)
-  lastClone.setAttribute('aria-hidden','true')
-  firstClone.setAttribute('aria-hidden','true')
-  rail.prepend(lastClone)
-  rail.append(firstClone)
+  const count=cards.length
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches
+  const DELAY=7000
+  let active=0,paused=reduce,inView=false,timer=null,started=0,remaining=DELAY
 
-  if(pagination){
-    const viewport=document.createElement('div')
-    viewport.className='recent-viewport'
-    rail.before(viewport)
-    viewport.append(rail,pagination)
-  }
+  rail.querySelector('.recent-hud')?.remove()
+  const hud=document.createElement('div')
+  hud.className='recent-hud'
+  hud.innerHTML='<button class="recent-pause" type="button"></button><div class="recent-progress" aria-hidden="true"><i></i></div>'
+  rail.append(hud)
+  const pauseButton=hud.querySelector('.recent-pause'),bar=hud.querySelector('.recent-progress i')
+  const pauseIcon='<svg viewBox="0 0 14 14" aria-hidden="true"><path fill="currentColor" d="M3 1.5h2.6v11H3zm5.4 0H11v11H8.4z"/></svg>'
+  const playIcon='<svg viewBox="0 0 14 14" aria-hidden="true"><path fill="currentColor" d="M3.5 1.5l9 5.5-9 5.5z"/></svg>'
+  const drawPause=()=>{pauseButton.innerHTML=paused?playIcon:pauseIcon;pauseButton.setAttribute('aria-label',paused?'자동 넘김 다시 시작':'자동 넘김 멈춤')}
+  cards.forEach(card=>{card.querySelectorAll('a,img').forEach(el=>el.setAttribute('draggable','false'))})
 
-  const cardWidth=()=>rail.querySelector('.recent-card')?.getBoundingClientRect().width||0
-  const step=()=>cardWidth()+(parseFloat(getComputedStyle(rail).columnGap)||0)
-  const inset=()=>Math.max(0,(rail.clientWidth-cardWidth())/2)
-  const positionFor=index=>index*step()-inset()
-  const centeredIndex=()=>Math.round((rail.scrollLeft+inset())/step())
-  const setCardStates=()=>{
-    const activeIndex=centeredIndex()
-    ;[...rail.querySelectorAll('.recent-card')].forEach((card,index)=>{
-      card.classList.toggle('is-active',index===activeIndex)
-      card.classList.toggle('is-before',index===activeIndex-1)
-      card.classList.toggle('is-after',index===activeIndex+1)
+  // Shortest signed distance from the middle card, so the stack loops both ways.
+  const offset=index=>{let d=((index-active)%count+count)%count;if(d>count/2)d-=count;return d}
+  const place=(direction=0)=>{
+    cards.forEach((card,index)=>{
+      const before=card.dataset.slot===undefined?null:Number(card.dataset.slot)
+      let next=offset(index)
+      // Out of sight: a leaving card waits on the side it left from.
+      if(Math.abs(next)>=3)next=3*Math.sign(before?before:(next||direction||1))
+      // A card that has to change sides jumps to the far edge of its new side first, so it never crosses the stack.
+      if(before&&next&&Math.sign(before)!==Math.sign(next)){
+        card.classList.add('is-snap');card.dataset.slot=String(3*Math.sign(next));void card.offsetWidth;card.classList.remove('is-snap')
+      }
+      card.dataset.slot=String(next)
+      const isMiddle=next===0
+      card.setAttribute('aria-hidden',String(!isMiddle))
+      card.querySelector('a')?.setAttribute('tabindex',isMiddle?'0':'-1')
     })
-    const activeProject=(activeIndex-1+originals.length)%originals.length
-    pagination?.querySelectorAll('button').forEach((dot,index)=>{
-      const active=index===activeProject
-      dot.classList.toggle('is-active',active)
-      dot.setAttribute('aria-current',active?'true':'false')
-    })
   }
-  const alignFirst=()=>{
-    rail.scrollTo({left:positionFor(1),behavior:'auto'})
-    setCardStates()
-  }
-  const normalizeLoop=()=>{
-    const index=centeredIndex()
-    if(index===0)rail.scrollTo({left:positionFor(originals.length),behavior:'auto'})
-    if(index===originals.length+1)rail.scrollTo({left:positionFor(1),behavior:'auto'})
-    setCardStates()
-  }
-  const goTo=index=>rail.scrollTo({left:positionFor(index),behavior:'smooth'})
-  if(pagination){
-    pagination.innerHTML=originals.map((_,index)=>`<button type="button" aria-label="${index+1}번째 프로젝트로 이동" aria-current="${index===0?'true':'false'}"></button>`).join('')
-  }
-  const autoplayQuery=matchMedia('(prefers-reduced-motion: no-preference)')
-  let autoplayTimer
-  let suppressClickUntil=0
-  const autoplayDelay=()=>matchMedia('(max-width: 720px)').matches?3000:4000
-  const stopAutoplay=()=>{
-    clearTimeout(autoplayTimer)
-    autoplayTimer=undefined
-  }
-  const scheduleAutoplay=()=>{
-    stopAutoplay()
-    if(!autoplayQuery.matches||pagination?.matches(':focus-within'))return
-    autoplayTimer=setTimeout(()=>{
-      if(pagination?.matches(':focus-within'))return
-      goTo(centeredIndex()+1)
-      scheduleAutoplay()
-    },autoplayDelay())
-  }
-  requestAnimationFrame(alignFirst)
-  addEventListener('resize',()=>{alignFirst();scheduleAutoplay()},{passive:true})
-  autoplayQuery.addEventListener('change',scheduleAutoplay)
-  scheduleAutoplay()
 
-  pagination?.querySelectorAll('button').forEach((dot,index)=>dot.addEventListener('click',()=>{goTo(index+1);scheduleAutoplay()}))
-  pagination?.addEventListener('focusin',stopAutoplay)
-  pagination?.addEventListener('focusout',scheduleAutoplay)
-  pagination?.parentElement?.addEventListener('mouseenter',stopAutoplay)
-  pagination?.parentElement?.addEventListener('mouseleave',scheduleAutoplay)
+  const freezeBar=()=>{bar.style.transition='none';bar.style.transform=`scaleX(${1-remaining/DELAY})`}
+  const stopTimer=()=>{clearTimeout(timer);timer=null;if(started){remaining=Math.max(0,remaining-(performance.now()-started));started=0}freezeBar()}
+  const startTimer=()=>{
+    stopTimer()
+    if(paused||!inView||document.hidden)return
+    started=performance.now()
+    timer=setTimeout(()=>go(active+1,1),remaining)
+    bar.offsetWidth
+    bar.style.transition=`transform ${remaining}ms linear`
+    bar.style.transform='scaleX(1)'
+  }
+  const go=(target,direction)=>{
+    active=((target%count)+count)%count
+    place(direction)
+    remaining=DELAY;started=0
+    startTimer()
+  }
 
+  pauseButton.addEventListener('click',()=>{paused=!paused;drawPause();paused?stopTimer():startTimer()},{signal})
+
+  // Clicks: a side card moves the stack; the middle card follows its link unless the pointer was dragging.
+  let suppressClick=false
   rail.addEventListener('click',event=>{
-    if(Date.now()<suppressClickUntil){event.preventDefault();event.stopPropagation();return}
-    const card=event.target.closest('.recent-card')
-    const cardIndex=[...rail.querySelectorAll('.recent-card')].indexOf(card)
-    if(cardIndex<0||cardIndex===centeredIndex())return
-    event.preventDefault()
-    event.stopPropagation()
-    goTo(cardIndex)
-    scheduleAutoplay()
-  },true)
+    const link=event.target.closest('.recent-card a')
+    if(!link)return
+    if(suppressClick){event.preventDefault();suppressClick=false;return}
+    const slot=Number(link.closest('.recent-card').dataset.slot)
+    if(slot!==0){event.preventDefault();go(active+slot,Math.sign(slot))}
+  },{capture:true,signal})
 
-  let pointerId=null
-  let startX=0
-  let startScroll=0
-  let startIndex=1
-  let startTime=0
-  let moved=false
-  let pressedLink=null
-  let pressedCardIndex=null
-  let settleTimer
-  rail.addEventListener('dragstart',event=>event.preventDefault())
-  rail.addEventListener('pointerdown',event=>{
-    if(event.target.closest('button'))return
-    pointerId=event.pointerId
-    startX=event.clientX
-    startScroll=rail.scrollLeft
-    startIndex=centeredIndex()
-    startTime=event.timeStamp
-    moved=false
-    pressedLink=event.target.closest('.recent-card a')
-    pressedCardIndex=[...rail.querySelectorAll('.recent-card')].indexOf(event.target.closest('.recent-card'))
-    stopAutoplay()
-    rail.classList.add('is-dragging')
-    rail.setPointerCapture(pointerId)
-  })
+  // Drag or swipe sideways: past 40 px it moves one card.
+  let press=null
+  rail.addEventListener('pointerdown',event=>{if(event.button!==0||event.target.closest('.recent-pause'))return;press={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false}},{signal})
   rail.addEventListener('pointermove',event=>{
-    if(event.pointerId!==pointerId)return
-    const delta=event.clientX-startX
-    if(Math.abs(delta)>2){
-      moved=true
-      rail.scrollLeft=startScroll-delta
-      event.preventDefault()
-    }
-  })
+    if(!press||event.pointerId!==press.id||press.moved)return
+    const dx=event.clientX-press.x,dy=event.clientY-press.y
+    if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){press.moved=true;rail.setPointerCapture?.(event.pointerId)}
+  },{signal})
   const release=event=>{
-    if(event.pointerId!==pointerId)return
-    rail.classList.remove('is-dragging')
-    if(rail.hasPointerCapture(pointerId))rail.releasePointerCapture(pointerId)
-    pointerId=null
-    const delta=event.clientX-startX
-    const duration=Math.max(1,event.timeStamp-startTime)
-    const velocity=delta/duration
-    const isMobile=matchMedia('(max-width: 720px)').matches
-    const shouldAdvance=isMobile&&(Math.abs(delta)>=40||Math.abs(velocity)>=.35)
-    const activeIndex=centeredIndex()
-    if(isMobile&&moved)suppressClickUntil=Date.now()+400
-    if(shouldAdvance){
-      let targetIndex=startIndex+(delta<0?1:-1)
-      if(targetIndex<0)targetIndex=originals.length
-      if(targetIndex>originals.length+1)targetIndex=1
-      goTo(targetIndex)
-    }
-    else if(moved)goTo(isMobile?startIndex:activeIndex)
-    else if(pressedCardIndex!==null&&pressedCardIndex!==activeIndex)goTo(pressedCardIndex)
-    else if(pressedLink?.href)location.assign(pressedLink.href)
-    pressedLink=null
-    pressedCardIndex=null
-    scheduleAutoplay()
+    if(!press||event.pointerId!==press.id)return
+    const dx=event.clientX-press.x
+    if(press.moved){suppressClick=true;setTimeout(()=>{suppressClick=false},0);if(Math.abs(dx)>40)go(active+(dx<0?1:-1),dx<0?1:-1)}
+    if(rail.hasPointerCapture?.(event.pointerId))rail.releasePointerCapture(event.pointerId)
+    press=null
   }
-  rail.addEventListener('pointerup',release)
-  rail.addEventListener('pointercancel',event=>{
-    if(event.pointerId!==pointerId)return
-    rail.classList.remove('is-dragging')
-    if(rail.hasPointerCapture(pointerId))rail.releasePointerCapture(pointerId)
-    pointerId=null
-    goTo(startIndex)
-    pressedLink=null
-    pressedCardIndex=null
-    scheduleAutoplay()
-  })
-  rail.addEventListener('scroll',()=>{
-    setCardStates()
-    clearTimeout(settleTimer)
-    settleTimer=setTimeout(normalizeLoop,160)
-  },{passive:true})
+  rail.addEventListener('pointerup',release,{signal})
+  rail.addEventListener('pointercancel',()=>{press=null},{signal})
+
+  addEventListener('keydown',event=>{
+    if(!inView||event.altKey||event.ctrlKey||event.metaKey||event.target.closest?.('input,textarea,select,[contenteditable]'))return
+    if(event.key==='ArrowRight'){event.preventDefault();go(active+1,1)}
+    if(event.key==='ArrowLeft'){event.preventDefault();go(active-1,-1)}
+  },{signal})
+
+  const observer=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting&&entry.intersectionRatio>=.35;inView?startTimer():stopTimer()},{threshold:[0,.35,.6]})
+  observer.observe(rail)
+  signal.addEventListener('abort',()=>{observer.disconnect();clearTimeout(timer)})
+  document.addEventListener('visibilitychange',()=>{document.hidden?stopTimer():startTimer()},{signal})
+
+  if(reduce)hud.querySelector('.recent-progress').hidden=true
+  drawPause()
+  place()
+  freezeBar()
 }
 
 window.node8InitializeRecentCarousel=initializeRecentCarousel
 addEventListener('node8:recent-projects-ready',initializeRecentCarousel)
-if(document.querySelector('.recent-rail')?.dataset.sanityLoaded)initializeRecentCarousel()
+initializeRecentCarousel()

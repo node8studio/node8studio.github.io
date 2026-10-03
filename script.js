@@ -1,6 +1,6 @@
 const currentScript=document.currentScript;
-const carouselScript=document.createElement('script');carouselScript.src=new URL('recent-carousel.js?v=mobile-recent-swipe-autoplay-v3-20260924',currentScript.src).href;carouselScript.defer=true;document.head.appendChild(carouselScript);
-if(!document.querySelector('script[data-node8-cms]')){const cmsScript=document.createElement('script');cmsScript.src=new URL('cms-public.js?v=early-hero-20260929',currentScript.src).href;cmsScript.defer=true;document.head.appendChild(cmsScript);}
+const carouselScript=document.createElement('script');carouselScript.src=new URL('recent-carousel.js?v=stack-20261003',currentScript.src).href;carouselScript.defer=true;document.head.appendChild(carouselScript);
+if(!document.querySelector('script[data-node8-cms]')){const cmsScript=document.createElement('script');cmsScript.src=new URL('cms-public.js?v=stack-20261003',currentScript.src).href;cmsScript.defer=true;document.head.appendChild(cmsScript);}
 
 const footerVideo=document.querySelector('.node8-footer-media video');
 if(footerVideo){footerVideo.muted=true;if('IntersectionObserver' in window){const playObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)footerVideo.play().catch(()=>{});else footerVideo.pause()}));playObserver.observe(footerVideo)}else footerVideo.play().catch(()=>{})}

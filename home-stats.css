@@ -17,7 +17,7 @@
 .home-logos-track:has(img:hover) img:not(:hover),.home-logos-track.has-press img:not(.is-pressed){opacity:.28}
 .home-logos img:hover,.home-logos img.is-pressed{transform:scale(1.08)}
 @media(max-width:720px){
-  .home-stats{padding-top:72px;padding-bottom:24px;gap:36px}
+  .home-stats{padding-top:108px;padding-bottom:24px;gap:36px}
   .home-stats-grid{grid-template-columns:minmax(0,1fr);gap:0}
   .home-stat{grid-template-columns:minmax(0,44%) minmax(0,1fr);column-gap:16px;row-gap:4px;padding-block:20px;align-items:end}
   .home-stat:last-child{border-bottom:1px solid var(--line)}
