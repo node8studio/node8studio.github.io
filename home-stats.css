@@ -3,7 +3,8 @@
 .home-stats{display:grid;gap:clamp(40px,4.4vw,64px);padding-top:clamp(96px,10vw,168px);padding-bottom:clamp(24px,4vw,64px)}
 .home-stats-head{display:grid;gap:22px}
 .home-stats .label{font-size:var(--type-label)}
-.home-stats-title{margin:0;font-size:var(--type-statement);line-height:1.22;letter-spacing:-.035em;font-weight:600}
+/* Bold (700, director 2026-10-04): in Pretendard the Korean read thinner than the English titles at 600. */
+.home-stats-title{margin:0;font-size:var(--type-statement);line-height:1.22;letter-spacing:-.035em;font-weight:700}
 .home-stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,44px)}
 .home-stat{display:grid;align-content:start;gap:12px;padding-top:22px;border-top:1px solid var(--line);min-width:0}
 .home-stat-name{margin:0;font-size:var(--type-sub);font-weight:500;letter-spacing:-.015em}

@@ -7,14 +7,22 @@
 .hero [data-tune-id="hero-eyebrow"],.hero [data-tune-id="hero-title"],.hero [data-tune-id="hero-note"]{animation:node8-rise 1.1s var(--node8-ease) both}
 .hero [data-tune-id="hero-title"]{animation-delay:.11s}
 .hero [data-tune-id="hero-note"]{animation-delay:.22s}
-/* Home hero text group sinks into the frame as the page scrolls; script.js sets the transform. */
-.hero:not(.about-services-hero) .hero-content{will-change:transform}
+/* About hero: the three words of the title come up in turn on load, on the same beat as the home hero's three lines. */
+.about-services-hero .tune-w{display:inline-block;animation:node8-rise 1.1s var(--node8-ease) both;animation-delay:calc(var(--w,0) * .11s)}
+/* Home and About hero text groups sink into the frame as the page scrolls; script.js sets the transform. */
+.hero .hero-content{will-change:transform}
 
 /* Sections: children marked data-rise come up in turn when their data-rise-group first comes into view.
    script.js adds rise-ready only to groups the visitor has not seen yet, so nothing is hidden without the script. */
 .rise-ready [data-rise]{opacity:0;transform:translateY(28px)}
 .rise-ready.rise-in [data-rise]{opacity:1;transform:none;transition:opacity 1.1s var(--node8-ease),transform 1.1s var(--node8-ease);transition-delay:calc(var(--rise-i,0) * .11s)}
+/* Section heads (director 2026-10-05): the hairline over a numbered head draws from left to right as its part comes up,
+   so every part opens the same way — the site's line gesture (the M4 cards, the principles, the process). Also the rule
+   over the home logos (just before the logos come up) and the one over About 02 (with its sticky column). */
+.rise-ready .head-row::before,.head-row.rise-ready::before,.rise-ready .logos-rule,.craft-grid:has(.craft-sticky.rise-ready)::before{transform:scaleX(0)}
+.rise-ready.rise-in .head-row::before,.head-row.rise-ready.rise-in::before,.craft-grid:has(.craft-sticky.rise-in)::before{transform:none;transition:transform 1.1s var(--node8-ease)}
+.rise-ready.rise-in .logos-rule{transform:none;transition:transform 1.1s var(--node8-ease) .44s}
 
 @media (prefers-reduced-motion:reduce){
-  .hero [data-tune-id="hero-eyebrow"],.hero [data-tune-id="hero-title"],.hero [data-tune-id="hero-note"]{animation:none}
+  .hero [data-tune-id="hero-eyebrow"],.hero [data-tune-id="hero-title"],.hero [data-tune-id="hero-note"],.about-services-hero .tune-w{animation:none}
 }

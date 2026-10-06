@@ -7,12 +7,19 @@
 .home-intro .intro-copy{margin:0;max-width:none;white-space:nowrap;font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 12.5));line-height:1.04;letter-spacing:-.045em;font-weight:600}
 .home-intro .intro-line{display:block}
 .home-intro .intro-subcopy{margin:30px 0 0;font-size:var(--type-sub);line-height:1.55;font-weight:400;color:#3c3c39}
-/* The About link is a violet outline pill (director 2026-10-03); it fills on hover and the arrow steps up-right. */
-.home-intro .under-link{gap:10px;margin-top:40px;padding:13px 24px;border:1px solid var(--node8-violet);border-radius:999px;color:var(--node8-violet);font-weight:500;letter-spacing:-.01em;transition:background-color .6s var(--node8-ease),color .6s var(--node8-ease)}
+/* The About link is an outline pill (director 2026-10-03); it fills violet on hover and the arrow steps up-right. At rest
+   the type is black and a step bolder (director 2026-10-04, version 02 of two), the outline light grey (--pill-line in
+   section-head.css: black read heavy). */
+.home-intro .under-link{gap:10px;margin-top:40px;padding:13px 24px;border:1px solid var(--pill-line,rgba(19,19,19,.3));border-radius:999px;color:var(--ink);font-weight:600;letter-spacing:-.01em;transition:background-color .6s var(--node8-ease),border-color .6s var(--node8-ease),color .6s var(--node8-ease)}
 .home-intro .under-link span{display:inline-block;transition:transform .6s var(--node8-ease)}
-.home-intro .under-link:hover{gap:10px;background:var(--node8-violet);color:#fff}
+.home-intro .under-link:hover{gap:10px;border-color:var(--node8-violet);background:var(--node8-violet);color:#fff}
 .home-intro .under-link:hover span{transform:translate(3px,-3px)}
 .home-intro .under-link:focus-visible{outline:2px solid var(--node8-violet);outline-offset:3px}
+/* Tablet: a tall portrait screen made the card 820px around a 56px title — about 380px empty above and below, as much as
+   on a 1920 monitor at half the width. Capped so the rhythm matches 1024 (director 2026-10-05). */
+@media(min-width:721px) and (max-width:1000px){
+  .home-intro{min-height:min(78vh,560px)}
+}
 @media(max-width:720px){
   .home-intro{min-height:auto;padding-block:120px 80px}
   .home-intro .intro-copy{font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 9.6))}

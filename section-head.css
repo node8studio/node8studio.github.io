@@ -1,0 +1,44 @@
+/* Site system from the 2026-10-04 redesign (director, after the Oma and Satz references and the mockups): Pretendard for
+   Hangul (pretendard.css), head rows — one hairline over the text width, label, title and Korean line on the left two
+   thirds, buttons on the right third — and the studio's place and time in the header. Pages take it on as each one is
+   redesigned; the main page first. Dropped on the way (director): the page grid drawn as lines (pointless and ugly), the
+   facts and text links on the right of the head rows, the footer status line ("2026 프로젝트 문의 가능") — type smaller
+   than the site's type scale is not wanted. */
+body{font-family:Geist,"Pretendard Variable",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif}
+.head-row{position:relative;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:end;gap:24px 0;margin:0;padding-top:clamp(20px,1.8vw,28px);border-top:1px solid transparent}
+/* The hairline is drawn over the (transparent) border so it can draw itself in as the part comes up (motion.css). */
+.head-row::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;background:rgba(19,19,19,.14);transform-origin:0 50%}
+.head-row .head-kicker{margin:0 0 20px;font-size:var(--type-label);font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.head-aside{display:grid;justify-items:start;gap:16px;padding-bottom:8px}
+.head-sub{margin:28px 0 0;font-size:var(--type-sub);line-height:1.6;letter-spacing:-.02em;color:#3c3c39;text-wrap:pretty}
+/* Pill buttons on the right of a head row (director 2026-10-04): as the Heart first pill, a size smaller — black type a
+   step bolder at rest, the outline a light grey (black read heavy even at 1px), filled violet under the mouse. */
+:root{--pill-line:rgba(19,19,19,.3)}
+.head-aside--end{justify-items:end}
+.head-pills{display:flex;flex-wrap:wrap;gap:10px}
+.head-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid var(--pill-line);border-radius:999px;color:var(--ink);font-size:14px;font-weight:600;line-height:1.2;letter-spacing:-.01em;transition:background-color .6s var(--node8-ease),border-color .6s var(--node8-ease),color .6s var(--node8-ease)}
+.head-pill span{display:inline-block;transition:transform .6s var(--node8-ease)}
+.head-pill:hover{border-color:var(--node8-violet);background:var(--node8-violet);color:#fff}
+.head-pill:hover span{transform:translate(2px,-2px)}
+.head-pill:focus-visible{outline:2px solid var(--node8-violet);outline-offset:3px}
+/* Header: the studio's place and time, in the middle (over the hero, so white). */
+.site-locale{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;font-size:16px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;opacity:.82;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none}
+.site-locale span{margin-inline:.4em}
+/* At 16px the clock reaches the menu below about 1100px (38px over About at 1024; 33px clear at 1180), so it goes
+   at 1180 and under (2026-10-05 check). */
+@media(max-width:1180px){.site-locale{display:none}}
+@media(max-width:1000px){
+  .head-row{grid-template-columns:minmax(0,1fr)}
+  .head-aside,.head-aside--end{justify-items:start;padding-bottom:0}
+}
+@media(max-width:720px){
+  .head-sub{margin-top:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .head-pill,.head-pill span{transition:none}
+}
+/* Archive cards (Commercial · Cinematic): the title steps down with the screen — at 30px on every screen it covered about
+   40% of a tablet or phone thumbnail (director 2026-10-05). The rest of the card stays in archive.css. */
+.archive-card .archive-meta h2{font-size:26px;line-height:1.05;letter-spacing:-.04em}
+@media(max-width:1000px){.archive-card .archive-meta h2{font-size:22px}}
+@media(max-width:720px){.archive-card .archive-meta h2{font-size:20px}}

@@ -1,0 +1,103 @@
+/* About redesign (director 2026-10-04, from mockup/about.html draft 2; into the site 2026-10-05). The about page takes on
+   the main page's system: text held to 1440 at 1920, one hairline over each numbered head, the studio's place and time
+   in the header. The wide pictures — 01's film frame and 03's gallery — keep the gallery's earlier width (--wide-inset,
+   halfway between the frame and the old text margin). Each part has its own structure and one movement (script.js):
+   the big text fills in word by word, 01's film frame grows while held in the middle of the screen, 02's compare sweeps
+   open once and its process line draws through four steps.
+   01 About Node8: the film frame opens the part — it carries on the big text's centred axis, and the head row then
+   stands between it and the panels, so two picture blocks never meet — then the head row (title | lead), then the
+   principles as four picture panels that open sideways on a click, their caption under them. */
+.page-about{--grid-content-inset:max(clamp(20px,4.3vw,72px),calc((100vw - 1440px) / 2));--wide-inset:calc((var(--grid-frame-inset) + clamp(20px,4.3vw,72px)) / 2);--hair:rgba(19,19,19,.14)}
+.about-intro{display:block;padding-top:0;padding-bottom:clamp(96px,8.3vw,160px)}
+.intro-title{margin:0;font-size:var(--type-statement);line-height:1.22;letter-spacing:-.035em;font-weight:700}
+.intro-aside{padding-bottom:4px}
+.intro-lead{margin:0;font-size:var(--type-sub);line-height:1.7;letter-spacing:-.02em;color:#3c3c39;text-wrap:pretty}
+/* The film frame. With the script (is-held) it comes up at about half the text width, starts growing as soon as it is
+   fully in view, is held in the middle of the screen and finishes growing in the first 60% of the hold (--hold), then
+   moves on (director 2026-10-04: the growth has to read). The picture inside settles from a slight zoom as it grows.
+   --p 0 → 1 from script.js; --s0 is the starting size. Without the script it simply shows at full size.
+   16:9 on every screen, the ratio of the director's picture, so none of it is cut (director 2026-10-06; before, a 21:9
+   key visual cropped to 16:9 on tablets and 4:3 on phones). Across a wide screen a 16:9 frame is taller than the
+   window, so its width stops where its height leaves 24px above and below while it is held: whole on the screen.
+   While it is small, the clipped-away part above it read as more empty space under the Korean line (director
+   2026-10-06: too wide on every screen), so script.js pulls the stage up (--pull) until the small picture shows the
+   head row's gap (.intro-head) below that line — the same space as under the picture. The stage itself lets clicks
+   through where it now lies over the end of the big text; the picture is clipped for clicks as it is for the eye. */
+.intro-stage{--s0:.52;--hold:60vh;position:relative;margin:0 calc(var(--wide-inset) - var(--grid-content-inset))}
+.intro-stage.is-held{height:calc(var(--frame-h) + var(--hold));margin-top:calc(var(--pull,0px) * -1);pointer-events:none}
+.intro-frame{--p:1;--s:calc(var(--s0) + (1 - var(--s0)) * var(--p));position:relative;max-width:calc((100vh - 48px) * 16 / 9);max-width:calc((100svh - 48px) * 16 / 9);margin:0 auto;aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius);background:#e9e8e2;clip-path:inset(calc((1 - var(--s)) * 50%) round var(--radius))}
+.is-held .intro-frame{position:sticky;top:calc(50vh - var(--frame-h) / 2);top:calc(50svh - var(--frame-h) / 2);pointer-events:auto}
+.intro-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(calc(1.12 - var(--p) * .12))}
+/* Phones (director 2026-10-06): the frame is small there, so a touch on it opens the picture large, with no button on
+   the page. It fills the height of the screen and pans sideways under a finger from the middle; a phone turned
+   sideways shows it whole. The close sits at the foot in the middle, where the site's round buttons are, in the Top
+   button's look and at its height; the back gesture closes it too (script.js). */
+.intro-viewer{position:fixed;inset:0;z-index:60;background:#131313;opacity:0;visibility:hidden;transition:opacity .45s var(--node8-ease),visibility 0s linear .45s}
+.intro-viewer.is-open{opacity:1;visibility:visible;transition:opacity .45s var(--node8-ease)}
+.intro-viewer-pan{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;overscroll-behavior:contain;touch-action:pan-x;scrollbar-width:none}
+.intro-viewer-pan::-webkit-scrollbar{display:none}
+.intro-viewer-pan img{flex:none;display:block;width:auto;max-width:none;height:100%;margin:auto;user-select:none;-webkit-user-drag:none}
+.intro-viewer-close{position:absolute;left:calc(50% - 22px);bottom:16px;display:grid;place-items:center;width:44px;height:44px;margin:0;padding:0;border:1px solid #bdbdbd;border-radius:999px;background:rgba(255,255,255,.88);color:var(--ink);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.intro-viewer-close svg{display:block;width:14px;height:14px}
+.intro-head{margin-top:clamp(96px,8.3vw,160px)}
+/* Principles as panels that open sideways (director 2026-10-04, after looking at click-to-open components: the list
+   read bare and flat). Four pictures side by side across the text width; the open one takes most of the row and carries
+   its title and two lines on its picture (short loops later — a video in a panel plays only while it is open), the
+   others close to tall strips with their number and name. A click opens another; a closed strip under the mouse widens
+   a little and brightens, an invitation; the open picture zooms in slowly under the mouse (director 2026-10-05). */
+.intro-ways{margin-top:clamp(56px,6.25vw,120px)}
+.panes{display:flex;gap:clamp(8px,.6vw,12px);height:clamp(420px,31.25vw,600px)}
+.pane{--pi:clamp(18px,1.5vw,28px);--above:calc(var(--pi) + var(--type-sub) * 1.2 + clamp(14px,1.1vw,20px));position:relative;flex:1 1 0;min-width:0;overflow:hidden;border-radius:6px;background:#1b1b1a;color:#fff;isolation:isolate;transition:flex-grow .9s var(--node8-ease)}
+.pane.is-open{flex-grow:4}
+.pane:not(.is-open):hover{flex-grow:1.25}
+.pane-pic{position:absolute;inset:0;z-index:-2;margin:0}
+/* --focus on a picture (set in the HTML) moves the crop toward its subject, since a closed strip shows only a slice. */
+.pane-pic img,.pane-pic video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--focus,50% 50%);transform:scale(1.1);filter:brightness(.62) saturate(.85);transition:transform 1.4s var(--node8-ease),filter .9s var(--node8-ease)}
+.pane:not(.is-open):hover .pane-pic img,.pane:not(.is-open):hover .pane-pic video{filter:brightness(.78) saturate(.95)}
+.pane.is-open .pane-pic img,.pane.is-open .pane-pic video{transform:none;filter:none}
+@media(hover:hover){.pane.is-open:hover .pane-pic img,.pane.is-open:hover .pane-pic video{transform:scale(1.04)}}
+.pane::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(12,12,12,.78) 0%,rgba(12,12,12,.3) 45%,rgba(12,12,12,0) 75%);pointer-events:none}
+/* The whole strip is the button. */
+.pane-hit{position:absolute;inset:0;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.pane.is-open .pane-hit{cursor:default}
+.pane-hit:focus-visible{outline:2px solid #fff;outline-offset:-6px;border-radius:6px}
+/* Foot of every card (director: at the top it looked tacky): the number, and on the open card only a white hairline
+   that draws from the number to the right edge as it opens, the way the site's card lines draw. The name, or the open
+   title and its lines, stand just above on the same left edge (--above), so nothing moves up or down on a click. */
+.pane-top{position:absolute;left:var(--pi);right:var(--pi);bottom:var(--pi);display:flex;align-items:center;gap:clamp(12px,1vw,16px)}
+.pane-no{flex:none;font-size:var(--type-sub);line-height:1.2;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.pane-rule{flex:1;min-width:12px;height:1px;background:rgba(255,255,255,.55);transform:scaleX(0);transform-origin:0 50%;opacity:0;transition:transform .35s ease,opacity .35s ease}
+.pane.is-open .pane-rule{transform:none;opacity:1;transition:transform 1.1s var(--node8-ease) .3s,opacity .5s ease .3s}
+.pane-label{position:absolute;left:var(--pi);right:clamp(14px,1.2vw,22px);bottom:var(--above);font-size:var(--type-sub);line-height:1.35;font-weight:700;letter-spacing:-.02em;transition:opacity .3s ease}
+.pane.is-open .pane-label{opacity:0}
+.pane-body{position:absolute;left:var(--pi);right:var(--pi);bottom:var(--above);max-width:600px;pointer-events:none;opacity:0;transform:translateY(18px);transition:opacity .35s ease,transform .8s var(--node8-ease)}
+.pane.is-open .pane-body{opacity:1;transform:none;transition:opacity .7s var(--node8-ease) .38s,transform .9s var(--node8-ease) .38s}
+.pane-title{margin:0;font-size:clamp(28px,2.35vw,44px);line-height:1.15;letter-spacing:-.035em;font-weight:700}
+.pane-text{margin:14px 0 0;font-size:var(--type-sub);line-height:1.6;letter-spacing:-.02em;color:rgba(255,255,255,.88);text-wrap:pretty}
+/* The row's name under it, as the site's photo captions: bold and plain at the sub size (director 2026-10-05:
+   "4 Rules We Work By, on Every Project." — a label above read ambiguous, an invented card for it was rejected). */
+.ways-cap{margin:18px 0 0;font-size:var(--type-sub);line-height:1.45;letter-spacing:-.02em;text-wrap:pretty}
+.ways-cap strong{margin-right:.2em;font-weight:600;color:var(--ink)}
+.ways-cap span{font-weight:400;color:#3c3c39}
+@media(max-width:1000px){
+  .intro-stage{--s0:.56;--hold:52vh}
+  .panes{flex-wrap:wrap;height:auto;row-gap:8px}
+  .pane{height:clamp(380px,52vw,460px)}
+}
+@media(max-width:720px){
+  .intro-stage{--s0:.62;--hold:46vh}
+  .intro-frame{cursor:zoom-in;-webkit-tap-highlight-color:transparent}
+  /* Phone: the panels stack; closed ones are short strips, the open one tall. */
+  .panes{flex-direction:column;height:auto;gap:8px}
+  .pane{flex:none;height:76px;transition:height .8s var(--node8-ease)}
+  .pane.is-open{height:min(118vw,470px)}
+  .pane:not(.is-open):hover{flex-grow:0}
+  .ways-cap{margin-top:14px}
+  .pane-top{bottom:25px;right:auto}
+  .pane.is-open .pane-top{bottom:20px;right:20px}
+  .pane-label{left:64px;bottom:25px}
+  .pane-body{left:20px;right:20px;bottom:calc(20px + var(--type-sub) * 1.2 + 14px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .pane,.pane-pic img,.pane-pic video,.pane-label,.pane-body,.pane.is-open .pane-body,.pane-rule,.pane.is-open .pane-rule,.intro-viewer,.intro-viewer.is-open{transition:none}
+}

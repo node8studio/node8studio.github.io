@@ -1,0 +1,61 @@
+/* About 02 (bundle 5, director 2026-10-03/04): what clients can bring us, five kinds of work in order of importance, after
+   the director's reference (Framer "Feature Flipper"). PC: five picture cells in one band that runs to 6px from the
+   window edges (as the hero frame), the widest section of the page. The first cell starts open (3 : 1) and the cell
+   under the mouse or keyboard focus opens and stays open (script.js). Every cell shows its English name lying down; the
+   open cell adds the row from the M4 cards: its Korean line rising out of a mask, a hairline drawn left to right and the
+   page it leads to (Commercial or Cinematic ↗). A frosted number sits top left. Tablet and phone: the same cards in a
+   row swiped (or dragged with a mouse) one at a time, the row stacked without the hairline as on M4's phone cards.
+   The copy above follows 01 (label, Title, Korean line, aligned left); sizes from type-scale.css except in-picture type. */
+.about-work{display:grid;gap:clamp(40px,4.4vw,64px);padding-top:0;padding-bottom:clamp(120px,13.5vw,260px)}
+.about-work-copy{display:grid;align-content:start}
+.about-work .label{font-size:var(--type-label)}
+.about-work-title{margin:22px 0 0;font-size:var(--type-title);line-height:1;letter-spacing:-.045em;font-weight:600;text-wrap:balance}
+.about-work-body{margin:30px 0 0;font-size:var(--type-sub);line-height:1.55;letter-spacing:-.02em;font-weight:400;color:#3c3c39;text-wrap:pretty}
+.work-row{display:flex;gap:clamp(8px,.7vw,12px);height:clamp(360px,62vh,640px);margin-inline:calc(var(--grid-frame-inset) - var(--grid-content-inset))}
+.work-cell{position:relative;flex:1 1 0;min-width:0;overflow:hidden;border-radius:6px;background:#e9e8e2;transition:flex-grow .9s var(--node8-ease)}
+.work-cell.is-open{flex-grow:3}
+.work-link{position:absolute;inset:0;display:block;color:#fff}
+.work-link img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;transition:transform .9s var(--node8-ease)}
+.work-cell.is-open .work-link img{transform:scale(1.03)}
+/* A low shade only, so the white type reads without a big dark area. */
+.work-link::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.6) 0%,rgba(12,12,12,.22) 30%,rgba(12,12,12,0) 56%);pointer-events:none}
+/* Number: a dark frosted chip (as the M4 pause button), so it reads on a bright sky as well as a dark frame. */
+.work-num{position:absolute;z-index:1;top:clamp(12px,1vw,18px);left:clamp(12px,1vw,18px);padding:5px 11px;border-radius:999px;background:rgba(19,19,19,.3);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:var(--type-label);line-height:1.2;font-weight:500;letter-spacing:.01em;color:rgba(255,255,255,.92)}
+/* A small dot before the number (director 2026-10-03), white like the number; violet was tried and lost on the pictures. */
+.work-num::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;border-radius:50%;background:currentColor;vertical-align:middle;transform:translateY(-1px)}
+/* Name in every cell, lying down (director 2026-10-04). The open cell adds the M4 card row: the Korean line rises out of
+   its mask, the hairline draws left to right, then the page it leads to appears. Closing hides the row at once. */
+.work-text{position:absolute;z-index:1;left:clamp(14px,1.3vw,24px);right:clamp(14px,1.3vw,24px);bottom:clamp(14px,1.3vw,24px)}
+.work-name{display:block;font-size:clamp(22px,1.9vw,36px);line-height:1.05;letter-spacing:-.03em;font-weight:600}
+.work-cap{display:flex;align-items:center;gap:clamp(12px,1vw,18px);margin-top:clamp(8px,.6vw,12px);font-size:clamp(14px,.95vw,18px);line-height:1.4;letter-spacing:-.01em;opacity:0;transition:opacity .2s var(--node8-ease)}
+.work-cell.is-open .work-cap{opacity:1;transition:opacity .4s var(--node8-ease) .3s}
+.work-line{flex:none;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em;color:rgba(255,255,255,.86);white-space:nowrap}
+.work-line>span{display:block;transform:translateY(108%);transition:transform .9s var(--node8-ease)}
+.work-cell.is-open .work-line>span{transform:none;transition-delay:.35s}
+.work-rule{flex:1;min-width:24px;height:1px;background:rgba(255,255,255,.38);transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--node8-ease)}
+.work-cell.is-open .work-rule{transform:none;transition-delay:.55s}
+.work-dest{flex:none;font-weight:500;color:rgba(255,255,255,.92);white-space:nowrap;opacity:0;transition:opacity .6s var(--node8-ease)}
+.work-cell.is-open .work-dest{opacity:1;transition-delay:.8s}
+.work-link:focus-visible{outline:2px solid var(--node8-violet);outline-offset:-4px;border-radius:6px}
+/* Tablet and phone: no hover to open a cell, so the cards sit in a row you swipe; the next card's edge shows. */
+@media(max-width:1000px){
+  .about-work{padding-bottom:clamp(140px,18vw,180px)}
+  .work-row{height:auto;margin-inline:calc(-1 * var(--grid-content-inset));padding-inline:var(--grid-content-inset);scroll-padding-inline:var(--grid-content-inset);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+  .work-row::-webkit-scrollbar{display:none}
+  .work-row.is-dragging{scroll-snap-type:none;cursor:grabbing;user-select:none;-webkit-user-select:none}
+  @media(hover:hover){.work-row{cursor:grab}}
+  .work-cell,.work-cell.is-open{flex:0 0 44vw;aspect-ratio:4/5;scroll-snap-align:start}
+  .work-cell.is-open .work-link img{transform:none}
+  /* Cards: the row stacks without the hairline, as on M4's phone cards, and shows on every card. */
+  .work-cap,.work-cell.is-open .work-cap{display:grid;gap:4px;opacity:1;transition:none}
+  .work-line>span,.work-cell.is-open .work-line>span{transform:none;transition:none}
+  .work-line{white-space:normal}
+  .work-rule{display:none}
+  .work-dest,.work-cell.is-open .work-dest{opacity:1;transition:none}
+}
+@media(max-width:720px){
+  .about-work{gap:36px;padding-bottom:160px}
+  .about-work-title{margin-top:18px}
+  .about-work-body{margin-top:22px}
+  .work-cell,.work-cell.is-open{flex-basis:78vw}
+}

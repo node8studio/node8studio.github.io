@@ -1,0 +1,66 @@
+/* Main page, redesign of 2026-10-04 (director, from the mockups). Text held to 1440 at 1920 while the hero, the logo
+   strip and the slider keep their width; numbers in three equal thirds; the same space above every head row.
+   03 Now Booking (take B of three, director: "제일 깔끔해"): the five kinds of work listed on the left — number, the
+   English name large, the Korean under it, the chosen one in ink with an arrow toward the picture — and the picture on
+   the right, as tall as the list. Inside the picture, the M4 card row (a short line, a hairline, the page with examples)
+   and the usual length of the work on a frosted white chip (white at 55%, director). The studio line sits under the
+   title. The row under the mouse or keyboard focus (a tap on touch screens) shows its picture (script.js). */
+.page-home{--grid-content-inset:max(clamp(20px,4.3vw,72px),calc((100vw - 1440px) / 2))}
+.page-home .home-logos{margin-inline:calc(-1 * var(--grid-content-inset))}
+/* A hairline over the text width above the logo strip (director 2026-10-04): numbers and brands are two kinds of proof.
+   The strip sits a little further under it than the numbers sit under their rules — 40 at 1920, 24 on a phone. */
+.page-home .logos-rule{height:1px;background:rgba(19,19,19,.14);transform-origin:0 50%}
+.page-home .logos-rule + .home-logos{margin-top:calc(clamp(24px,2.1vw,40px) - clamp(40px,4.4vw,64px))}
+@media(max-width:720px){.page-home .logos-rule + .home-logos{margin-top:-12px}}
+.page-home .home-stats{padding-bottom:clamp(96px,8.3vw,160px)}
+.page-home .home-stats-grid{column-gap:0}
+.page-home .home-stat{margin-right:clamp(20px,3vw,44px)}
+.page-home .recent-projects{padding-top:clamp(64px,6.25vw,120px);padding-bottom:clamp(96px,8.3vw,160px)}
+.page-home .recent-projects .section-head{margin-bottom:clamp(32px,3.3vw,56px)}
+/* "Recent Projects." on the same Title step as "What We Make" (director 2026-10-05: 03's spacing is right, 02 looked
+   pressed together). Tablet and phone still had the old display-title — 500 weight, -0.08em, 0.9 line. */
+.page-home .recent-projects .display-title{margin:0;font-size:var(--type-title);line-height:1;letter-spacing:-.045em;font-weight:600}
+
+.home-booking{display:grid;gap:clamp(40px,4.4vw,72px);padding-top:clamp(64px,6.25vw,120px);padding-bottom:clamp(120px,13.5vw,260px)}
+.home-booking .head-row{grid-template-columns:minmax(0,1fr)}
+.booking-title{margin:0;font-size:var(--type-title);line-height:1;letter-spacing:-.045em;font-weight:600}
+.booking-body{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(32px,3.4vw,64px);align-items:stretch}
+.booking-list{margin:0;padding:0;list-style:none;border-top:1px solid rgba(19,19,19,.14)}
+.booking-list li{border-bottom:1px solid rgba(19,19,19,.14)}
+.booking-list button{display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:baseline;width:100%;margin:0;padding:clamp(16px,1.5vw,22px) 0;border:0;background:none;color:#b3b1aa;font:inherit;text-align:left;cursor:pointer;transition:color .45s var(--node8-ease)}
+/* Numbers at the sub-text size in bold (director 2026-10-04, with the About lists): item numbers are not small type. */
+.booking-no{font-size:var(--type-sub);font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.booking-name{font-size:clamp(28px,2.35vw,44px);line-height:1.05;letter-spacing:-.035em;font-weight:600}
+.booking-ko{grid-column:2;margin-top:8px;font-size:15px;letter-spacing:-.01em}
+.booking-arrow{grid-column:3;grid-row:1;align-self:center;font-size:22px;color:var(--ink);opacity:0;transform:translateX(-10px);transition:opacity .4s var(--node8-ease),transform .7s var(--node8-ease)}
+.booking-list button[aria-selected="true"],.booking-list button:hover,.booking-list button:focus-visible{color:var(--ink)}
+.booking-list button[aria-selected="true"] .booking-arrow{opacity:1;transform:none}
+/* The chosen title only in violet (director 2026-10-04); its number, Korean line and arrow stay black. */
+.booking-name{transition:color .45s var(--node8-ease)}
+.booking-list button[aria-selected="true"] .booking-name{color:var(--node8-violet)}
+.booking-list button:focus-visible{outline:2px solid var(--node8-violet);outline-offset:4px}
+.booking-pic{position:relative;margin:0;min-height:360px;overflow:hidden;border-radius:6px;background:#e9e8e2}
+.booking-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.03);transition:opacity .6s var(--node8-ease),transform 1.2s var(--node8-ease)}
+.booking-pic img.is-on{opacity:1;transform:none}
+.booking-pic::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.6) 0%,rgba(12,12,12,.2) 26%,rgba(12,12,12,0) 50%);pointer-events:none}
+.booking-chip{position:absolute;z-index:1;top:clamp(12px,1vw,18px);left:clamp(12px,1vw,18px);padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);font-size:var(--type-label);line-height:1.2;font-weight:500;letter-spacing:.01em;color:#131313}
+.booking-chip::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;border-radius:50%;background:currentColor;vertical-align:middle;transform:translateY(-1px)}
+.booking-row{position:absolute;z-index:1;left:clamp(18px,1.7vw,32px);right:clamp(18px,1.7vw,32px);bottom:clamp(18px,1.7vw,30px);display:flex;align-items:center;gap:clamp(14px,1.2vw,22px);font-size:clamp(15px,1vw,18px);line-height:1.4;letter-spacing:-.01em;color:#fff}
+/* The line gives way (wraps) before the link does: on a tablet the picture is narrow and the link's arrow was cut off.
+   When it wraps, the two lines are evened out so no word is left alone. */
+.booking-line{flex:0 1 auto;min-width:0;max-width:70%;color:rgba(255,255,255,.9);text-wrap:balance}
+.booking-rule{flex:1;min-width:24px;height:1px;background:rgba(255,255,255,.38)}
+.booking-dest{flex:none;font-weight:500;color:#fff;white-space:nowrap}
+.booking-dest span{display:inline-block;transition:transform .5s var(--node8-ease)}
+.booking-dest:hover span,.booking-dest:focus-visible span{transform:translate(2px,-2px)}
+@media(max-width:720px){
+  .page-home .home-stat{margin-right:0}
+  .booking-body{grid-template-columns:minmax(0,1fr);row-gap:28px}
+  .booking-pic{min-height:0;aspect-ratio:4/3}
+  .booking-name{font-size:28px}
+  .booking-line{flex:1 1 auto;min-width:0;max-width:none}
+  .booking-rule,.booking-dest{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .booking-pic img,.booking-arrow,.booking-list button,.booking-name,.booking-dest span{transition:none}
+}

@@ -1,0 +1,102 @@
+/* About 03 (bundle 5, director 2026-10-04): the amount of work, after the director's reference (Framer "Infinite Img
+   Gallery"): a field of pictures that wraps in every direction, in a frame, the Node8 logo fixed in the middle under it.
+   Third pass with the director the same day: pictures in three sizes mixed at random whatever their shape, laid out once
+   so they look free but keep even gaps. Since 2026-10-05 (director: "우주가 블랙이니까" — the copy speaks of small
+   universes) they float in space: a near-black frame with small stars in three depths and a white logo; the stars shift a
+   little with the mouse and drift slower than the pictures while the table is dragged (script.js draws them, from a fixed
+   seed). The stone grey table before it read well but plain; the very light grey of the second pass read as an empty box. The layout is in the HTML in 1920 px
+   (--x --y --w --h, repeating in a tile of --tile-w × --tile-h) and --u is one of those px at this width. Titles show on
+   a PC only under the mouse (forty white titles on dark shades made it look busy); touch screens keep them, except on
+   the small pictures. The copy above (label, Title, Korean line) is a head row as on every numbered part (about
+   redesign 2026-10-04). The frame's sides sit halfway between the frame and the old text margin (--wide-inset, the same
+   width as 01's film frame; 39 at 1920), and the same margin
+   is left above and below it when it fills the window — but it is never taller than the tile seen at the drag's
+   step-back (0.85), so no picture shows twice at once (phones and tablets get a shorter frame). Sizes at 1920 (square
+   root of the area): small 135, medium 185, large 261 — about 30 pictures in view. script.js moves .gallery-world,
+   steps .gallery-zoom back while the table is dragged, plays the entry (the pictures lie in a pile in the middle and
+   spread out) and builds the enlarged view (.gallery-view). */
+.about-gallery{--gallery-inset:var(--wide-inset);display:grid;gap:clamp(40px,4.4vw,64px);padding-top:clamp(64px,6.25vw,120px);padding-bottom:clamp(120px,13.5vw,260px)}
+.about-gallery-title{margin:22px 0 0;font-size:var(--type-title);line-height:1;letter-spacing:-.045em;font-weight:600;text-wrap:balance}
+.gallery-frame{--u:clamp(.5px,calc(100vw / 1920),1px);position:relative;isolation:isolate;height:calc(100vh - var(--gallery-inset) * 2);height:calc(100svh - var(--gallery-inset) * 2);min-height:520px;max-height:min(1080px,calc(var(--tile-h) * var(--u) * .85));margin-inline:calc(var(--gallery-inset) - var(--grid-content-inset));overflow:hidden;overflow:clip;border:1px solid var(--space);border-radius:var(--radius);background:var(--space)}
+/* The night of the frame and of the large view (the view hangs from the page, so the colour sits on it). The star
+   canvases are stretched to their box; script.js draws them at the screen's pixel density. */
+.page-about{--space:#06070a}
+.gallery-stars,.gallery-view-stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.gallery-stars{z-index:-1}
+/* "Node8" alone (director 2026-10-04), white on the night (2026-10-05 — the black file inverted); the layout keeps the
+   middle of the tile clear for it, and dragged pictures pass over it. Hidden while the pictures lie in their pile. */
+.gallery-logo{position:absolute;z-index:0;left:50%;top:50%;width:calc(203 * var(--u));height:auto;transform:translate(-50%,-50%);filter:invert(1);pointer-events:none;user-select:none;-webkit-user-select:none}
+.gallery-frame.is-piled .gallery-logo{opacity:0}
+.gallery-field{position:absolute;z-index:1;inset:0;overflow:hidden;overflow:clip;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+@media(hover:hover){.gallery-field{cursor:grab}}
+.gallery-field.is-dragging{cursor:grabbing}
+.gallery-zoom{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
+.gallery-world{position:absolute;left:0;top:0;width:calc(var(--tile-w) * var(--u));height:calc(var(--tile-h) * var(--u));margin:0;padding:0;list-style:none;will-change:transform}
+.gallery-card{position:absolute;left:calc(var(--x) * var(--u));top:calc(var(--y) * var(--u));width:calc(var(--w) * var(--u));height:calc(var(--h) * var(--u))}
+.gallery-card button{position:relative;display:block;width:100%;height:100%;margin:0;padding:0;border:0;border-radius:6px;overflow:hidden;background:#15161b;color:#fff;font:inherit;text-align:left;cursor:inherit;-webkit-user-drag:none}
+.gallery-card img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none;transition:transform .9s var(--node8-ease)}
+@media(hover:hover){.gallery-card button:hover img{transform:scale(1.04)}.gallery-field.is-dragging .gallery-card button:hover img{transform:none}}
+/* A low shade only, as 02's cells, so the white title reads without a dark card. */
+.gallery-card button::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.55) 0%,rgba(12,12,12,.18) 32%,rgba(12,12,12,0) 58%);pointer-events:none}
+/* Title in the picture (the reference: 18px semibold, 20px in, on a 300 card), following the picture's width. */
+.gallery-title{position:absolute;z-index:1;left:max(10px,calc(var(--w) * var(--u) * .066));right:max(10px,calc(var(--w) * var(--u) * .066));bottom:max(9px,calc(var(--w) * var(--u) * .06));display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:clamp(13px,calc(var(--w) * var(--u) * .065),18px);line-height:1.25;letter-spacing:-.01em;font-weight:600}
+@media(hover:hover) and (min-width:1001px){
+  .gallery-title{opacity:0;transform:translateY(6px);transition:opacity .35s var(--node8-ease),transform .6s var(--node8-ease)}
+  .gallery-card button::after{opacity:0;transition:opacity .35s var(--node8-ease)}
+  .gallery-card button:hover .gallery-title,.gallery-card button:focus-visible .gallery-title{opacity:1;transform:none}
+  .gallery-card button:hover::after,.gallery-card button:focus-visible::after{opacity:1}
+  .gallery-field.is-dragging .gallery-card button:hover .gallery-title,.gallery-field.is-dragging .gallery-card button:hover::after{opacity:0}
+}
+/* Touch screens show the titles all the time; a small picture has no room for one. */
+@media(hover:none),(max-width:1000px){.gallery-card.is-s .gallery-title,.gallery-card.is-s button::after{display:none}}
+.gallery-card button:focus-visible{outline:2px solid var(--node8-violet);outline-offset:-4px}
+/* The card that is open in the large view leaves its slot empty, as in the reference. */
+.gallery-card.is-lifted button{visibility:hidden}
+
+/* Large view (director 2026-10-04): the picture at its own ratio, no back side; a click on the picture puts it back.
+   Arrows go through the pictures in order. Its project name sits bottom left as the title under the mouse does (asked
+   for later the same day), coming in once the picture has landed. Since 2026-10-05 it opens in the gallery's night —
+   the stars across the whole window — instead of on a white veil. */
+.gallery-view{position:fixed;inset:0;z-index:60;touch-action:none}
+.gallery-view[hidden]{display:none}
+.gallery-view-veil{position:absolute;inset:0;background:var(--space);opacity:0;transition:opacity .45s var(--node8-ease)}
+.gallery-view.is-open .gallery-view-veil{opacity:1}
+.gallery-view-pic{position:fixed;display:block;margin:0;padding:0;border:0;border-radius:6px;overflow:hidden;background:#15161b;cursor:zoom-out}
+.gallery-view-pic img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
+.gallery-view-pic.is-flying{transition:left .7s var(--node8-ease),top .7s var(--node8-ease),width .7s var(--node8-ease),height .7s var(--node8-ease)}
+/* The card's low shade and title, the title at the Sub size of the type scale. */
+.gallery-view-pic::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.5) 0%,rgba(12,12,12,.16) 24%,rgba(12,12,12,0) 44%);opacity:0;transition:opacity .35s var(--node8-ease);pointer-events:none}
+.gallery-view-title{position:absolute;z-index:1;left:clamp(16px,1.5vw,28px);right:clamp(16px,1.5vw,28px);bottom:clamp(14px,1.3vw,24px);display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:var(--type-sub);line-height:1.3;letter-spacing:-.01em;font-weight:600;color:#fff;text-align:left;opacity:0;transform:translateY(8px);transition:opacity .35s var(--node8-ease),transform .6s var(--node8-ease)}
+/* Live Action / AI before the title (director 2026-10-07: only here, not on the cards; at the start, so it keeps one
+   place from picture to picture), in the site's chip on a picture: dark glass and a white dot, at the Label size. A
+   mixed work carries both. */
+.gallery-view-chips{display:flex;gap:6px}
+.gallery-view-chips:empty{display:none}
+.gallery-view-chip{padding:5px 11px;border-radius:999px;background:rgba(19,19,19,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:var(--type-label);line-height:1.2;font-weight:500;letter-spacing:.01em;color:rgba(255,255,255,.94);white-space:nowrap}
+.gallery-view-chip::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;border-radius:50%;background:currentColor;vertical-align:middle;transform:translateY(-1px)}
+.gallery-view.is-open .gallery-view-pic::after,.gallery-view.is-open .gallery-view-title{opacity:1;transform:none;transition-delay:.45s}
+.gallery-view-pic:focus-visible{outline:2px solid var(--node8-violet);outline-offset:4px}
+/* Arrows: light frosted glass on the night, a thin white chevron (the dark chip they had on the white veil would not
+   show on black). */
+.gallery-view-arrow{position:fixed;top:50%;width:52px;height:52px;margin:-26px 0 0;padding:0;display:grid;place-items:center;border:0;border-radius:50%;background:rgba(255,255,255,.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;cursor:pointer;opacity:0;transition:opacity .4s var(--node8-ease),background-color .25s ease}
+.gallery-view.is-open .gallery-view-arrow{opacity:1;transition-delay:.2s,0s}
+.gallery-view-arrow.is-prev{left:clamp(16px,3vw,56px)}
+.gallery-view-arrow.is-next{right:clamp(16px,3vw,56px)}
+.gallery-view-arrow:hover{background:rgba(255,255,255,.24)}
+.gallery-view-arrow:focus-visible{outline:2px solid var(--node8-violet);outline-offset:3px}
+.gallery-view-arrow svg{display:block}
+@media(max-width:1000px){
+  .about-gallery{padding-bottom:clamp(140px,18vw,180px)}
+}
+@media(max-width:720px){
+  .about-gallery{gap:36px;padding-bottom:160px}
+  .about-gallery-title{margin-top:18px}
+  .gallery-frame{border-radius:15px}
+  /* Phone: the picture takes the width; the two arrows sit together under it (a sideways swipe works as well). */
+  .gallery-view-arrow{top:auto;bottom:calc(24px + env(safe-area-inset-bottom));width:48px;height:48px;margin:0}
+  .gallery-view-arrow.is-prev{left:calc(50% - 56px)}
+  .gallery-view-arrow.is-next{right:calc(50% - 56px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .gallery-card img,.gallery-view-veil,.gallery-view-arrow,.gallery-title,.gallery-card button::after,.gallery-view-title,.gallery-view-pic::after{transition:none}
+}

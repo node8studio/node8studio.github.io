@@ -51,14 +51,62 @@
   .node8-footer-title{font-size:clamp(115px,calc((100vw - 80px)*.102),184px)}
 }
 
-/* Mobile menu: KakaoTalk consult under the page links, set apart by a hairline. Desktop header shows the pill instead. */
-.nav-contact{display:none}
+/* Phone menu (director 2026-10-05, after growing-navigation.framer.website): a frosted glass sheet that grows out of the
+   ☰ corner under the header. Light glass with a hairline edge reads both on the white pages and over the dark hero (the
+   old box was white on white, black on the hero). Page links on hairlines, KakaoTalk as a black pill, mail and socials
+   small at the foot; the page behind dims. ☰ turns into ✕. Desktop header shows the pill instead. Second look (same day):
+   about 72% of the width, held to the right under ✕ (8px in, as the hero frame) so it reads as coming out of the button,
+   22px links — about 280px tall instead of 450. */
+.nav-contact,.nav-meta{display:none}
 @media(max-width:720px){
-  .nav.is-open .nav-contact{display:block;align-self:stretch;padding-top:16px;border-top:1px solid rgba(255,255,255,.22)}
-  .site-header.on-light .nav.is-open .nav-contact{border-top-color:rgba(19,19,19,.16)}
+  .nav{position:absolute;z-index:2;top:62px;left:auto;right:8px;width:min(72vw,300px);display:flex;flex-direction:column;align-items:stretch;gap:0;padding:4px 20px 20px;border:1px solid rgba(255,255,255,.6);border-radius:20px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);box-shadow:0 20px 56px rgba(10,10,10,.2),inset 0 0 0 1px rgba(19,19,19,.05);color:#131313;visibility:hidden;opacity:0;clip-path:inset(0 0 calc(100% - 40px) calc(100% - 40px) round 20px);transition:clip-path .5s var(--node8-ease),opacity .25s ease .1s,visibility 0s linear .5s}
+  .nav.is-open{visibility:visible;opacity:1;clip-path:inset(0 round 20px);transition:clip-path .6s var(--node8-ease),opacity .2s ease,visibility 0s}
+  .site-header .nav>a:not(.nav-contact){padding:12px 0;border-bottom:1px solid rgba(19,19,19,.12);font-size:22px;line-height:1.1;font-weight:500;letter-spacing:-.025em}
+  .site-header .nav .nav-contact{display:inline-flex;align-self:flex-start;margin-top:18px;padding:10px 18px;border-radius:999px;background:#131313;color:#fff;font-size:15px;font-weight:600;line-height:1.2}
+  .nav-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 10px;margin-top:16px;font-size:var(--type-label);line-height:1.4;color:#55554f}
+  .nav-meta a{color:inherit;font-weight:500}
+  .nav-meta a:first-child{flex-basis:100%}
+  /* Mail and SNS at the Label size, the three SNS links spread over their row out to the sheet's edges with even gaps,
+     each pressed across its share of the row (director 2026-10-07: they were 13px and too small to press). */
+  /* The desktop header dims its links (.62); in the sheet they stand at full ink, the page you are on a step bolder. */
+  .site-header .nav>*{transition:opacity .35s var(--node8-ease),transform .5s var(--node8-ease)}
+  .site-header .nav:not(.is-open)>*{opacity:0;transform:translateY(10px)}
+  .site-header .nav.is-open>*,.site-header .nav.is-open>a[aria-current=page]{opacity:1;transform:none}
+  .site-header .nav.is-open>a[aria-current=page]{font-weight:600}
+  .nav.is-open>:nth-child(1){transition-delay:.1s}
+  .nav.is-open>:nth-child(2){transition-delay:.15s}
+  .nav.is-open>:nth-child(3){transition-delay:.2s}
+  .nav.is-open>:nth-child(4){transition-delay:.25s}
+  .nav.is-open>:nth-child(5){transition-delay:.3s}
+  .site-header::before{content:"";position:fixed;inset:0;z-index:-1;background:rgba(10,10,10,.26);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s linear .4s}
+  .site-header:has(.nav.is-open)::before{opacity:1;visibility:visible;transition:opacity .4s ease,visibility 0s}
+  .menu-button[aria-expanded="true"]{font-size:0}
+  .menu-button[aria-expanded="true"]::before{content:"✕";font-size:21px;line-height:1}
+}
+@media(max-width:720px) and (prefers-reduced-motion:reduce){
+  .nav,.nav.is-open,.nav>*,.site-header::before{transition:none}
 }
 
 /* Footer: privacy policy link, set apart from the plain legal lines. */
 .node8-footer-legal.node8-footer-privacy{margin-top:6px}
 .node8-footer-privacy a{color:inherit;font-weight:inherit}
 .node8-footer-privacy a:hover,.node8-footer-privacy a:focus-visible{text-decoration:underline;text-underline-offset:3px}
+
+/* Footer copy and address: no word left alone on a last line (tablet and phone had "있습니다." and "Studio" alone). */
+.node8-footer-copy,.node8-footer-address{text-wrap:pretty}
+
+/* Touch screens: the small links and buttons keep their look but take a finger-sized press (about 44px tall) through an
+   invisible area around each one. Neighbours stay clear of each other except in the open phone menu, whose rows are close. */
+@media(pointer:coarse){
+  .nav a,.archive-filters button,.node8-footer-socials a,.booking-dest,.menu-button,.notfound-home,.site-header .brand{position:relative}
+  .nav a::after,.archive-filters button::after,.node8-footer-socials a::after,.booking-dest::after,.menu-button::after,.notfound-home::after,.site-header .brand::after{content:"";position:absolute;inset:-11px -8px}
+  .menu-button::after{inset:-9px -6px}
+  .nav-meta a::after{inset:-11px -10px}
+  .site-header .brand::after{inset:-8px 0}
+}
+
+/* Phone: back to top is a small round arrow (director 2026-10-05) — the word "Top" covered the ends of lines passing under it. */
+@media(max-width:720px){
+  .top-button{display:grid;place-items:center;width:44px;height:44px;padding:0;font-size:0;line-height:1}
+  .top-button::before{content:"↑";font-size:18px}
+}

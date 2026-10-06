@@ -49,6 +49,29 @@ const initializeRecentCarousel=()=>{
     })
   }
 
+  // Preview loops (CMS "메인 미리보기 영상", director 2026-10-06): a card's muted loop lies over its picture and only
+  // the middle card plays it, from the start each time the card arrives. It shows only once it is really playing, so a
+  // slow load just leaves the picture. The middle card's loop loads once the page has (the hero film comes first); the
+  // next card's loads while the stack is playing on screen, so autoplay finds it ready. It stops off screen, in a
+  // hidden tab and on pause; nothing loads or plays for visitors who reduce motion.
+  const clips=cards.map(card=>card.querySelector('.recent-video'))
+  let pageLoaded=document.readyState==='complete',clipAt=-1
+  const fetchClip=clip=>{if(clip.preload!=='auto'){clip.preload='auto';if(clip.readyState===0)clip.load()}}
+  const syncClips=()=>{
+    if(clipAt!==active){clipAt=active;if(clips[active])clips[active].currentTime=0}
+    const live=pageLoaded&&!reduce,running=live&&!paused&&inView&&!document.hidden
+    clips.forEach((clip,index)=>{
+      if(!clip)return
+      const slot=offset(index)
+      if((slot===0&&live)||(slot===1&&running))fetchClip(clip)
+      if(slot===0&&running){clip.play().catch(()=>{});return}
+      clip.pause()
+      if(slot!==0)clip.classList.remove('is-playing')
+    })
+  }
+  clips.forEach((clip,index)=>clip?.addEventListener('playing',()=>{if(offset(index)===0)clip.classList.add('is-playing')},{signal}))
+  if(!pageLoaded)addEventListener('load',()=>{pageLoaded=true;syncClips()},{once:true,signal})
+
   const freezeBar=()=>{bar.style.transition='none';bar.style.transform=`scaleX(${1-remaining/DELAY})`}
   const stopTimer=()=>{clearTimeout(timer);timer=null;if(started){remaining=Math.max(0,remaining-(performance.now()-started));started=0}freezeBar()}
   const startTimer=()=>{
@@ -60,14 +83,19 @@ const initializeRecentCarousel=()=>{
     bar.style.transition=`transform ${remaining}ms linear`
     bar.style.transform='scaleX(1)'
   }
-  const go=(target,direction)=>{
+  // A move by hand (swipe or drag) runs on the quicker curve (recent-stack.css .is-swift); autoplay, clicks and keys
+  // keep the slow one.
+  const section=rail.closest('.recent-projects')
+  const go=(target,direction,byHand=false)=>{
+    section?.classList.toggle('is-swift',byHand)
     active=((target%count)+count)%count
     place(direction)
     remaining=DELAY;started=0
     startTimer()
+    syncClips()
   }
 
-  pauseButton.addEventListener('click',()=>{paused=!paused;drawPause();paused?stopTimer():startTimer()},{signal})
+  pauseButton.addEventListener('click',()=>{paused=!paused;drawPause();paused?stopTimer():startTimer();syncClips()},{signal})
 
   // Clicks: a side card moves the stack; the middle card follows its link unless the pointer was dragging.
   let suppressClick=false
@@ -79,18 +107,21 @@ const initializeRecentCarousel=()=>{
     if(slot!==0){event.preventDefault();go(active+slot,Math.sign(slot))}
   },{capture:true,signal})
 
-  // Drag or swipe sideways: past 40 px it moves one card.
+  // Drag or swipe sideways: one card as soon as it passes 40 px, without waiting for the finger to lift (director
+  // 2026-10-05: on a phone it felt slow).
   let press=null
-  rail.addEventListener('pointerdown',event=>{if(event.button!==0||event.target.closest('.recent-pause'))return;press={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false}},{signal})
+  const swipe=dx=>{press.fired=true;go(active+(dx<0?1:-1),dx<0?1:-1,true)}
+  rail.addEventListener('pointerdown',event=>{if(event.button!==0||event.target.closest('.recent-pause'))return;press={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false,fired:false}},{signal})
   rail.addEventListener('pointermove',event=>{
-    if(!press||event.pointerId!==press.id||press.moved)return
+    if(!press||event.pointerId!==press.id||press.fired)return
     const dx=event.clientX-press.x,dy=event.clientY-press.y
-    if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){press.moved=true;rail.setPointerCapture?.(event.pointerId)}
+    if(!press.moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){press.moved=true;rail.setPointerCapture?.(event.pointerId)}
+    if(press.moved&&Math.abs(dx)>40)swipe(dx)
   },{signal})
   const release=event=>{
     if(!press||event.pointerId!==press.id)return
     const dx=event.clientX-press.x
-    if(press.moved){suppressClick=true;setTimeout(()=>{suppressClick=false},0);if(Math.abs(dx)>40)go(active+(dx<0?1:-1),dx<0?1:-1)}
+    if(press.moved){suppressClick=true;setTimeout(()=>{suppressClick=false},0);if(!press.fired&&Math.abs(dx)>40)swipe(dx)}
     if(rail.hasPointerCapture?.(event.pointerId))rail.releasePointerCapture(event.pointerId)
     press=null
   }
@@ -103,15 +134,16 @@ const initializeRecentCarousel=()=>{
     if(event.key==='ArrowLeft'){event.preventDefault();go(active-1,-1)}
   },{signal})
 
-  const observer=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting&&entry.intersectionRatio>=.35;inView?startTimer():stopTimer()},{threshold:[0,.35,.6]})
+  const observer=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting&&entry.intersectionRatio>=.35;inView?startTimer():stopTimer();syncClips()},{threshold:[0,.35,.6]})
   observer.observe(rail)
   signal.addEventListener('abort',()=>{observer.disconnect();clearTimeout(timer)})
-  document.addEventListener('visibilitychange',()=>{document.hidden?stopTimer():startTimer()},{signal})
+  document.addEventListener('visibilitychange',()=>{document.hidden?stopTimer():startTimer();syncClips()},{signal})
 
   if(reduce)hud.querySelector('.recent-progress').hidden=true
   drawPause()
   place()
   freezeBar()
+  syncClips()
 }
 
 window.node8InitializeRecentCarousel=initializeRecentCarousel
