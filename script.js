@@ -340,8 +340,11 @@ document.querySelectorAll('[data-gallery]').forEach(gallery=>{
   const place=r=>{pic.style.left=`${r.left}px`;pic.style.top=`${r.top}px`;pic.style.width=`${r.width}px`;pic.style.height=`${r.height}px`};
   const rectOf=tile=>{const r=tile.querySelector('button').getBoundingClientRect();return{left:r.left,top:r.top,width:r.width,height:r.height}};
   const preload=item=>{if(!item.big){item.big=new Image();item.big.decoding='async';item.big.src=item.full}return item.big};
+  // A large picture is fetched when it opens, with the ones either side so the arrows turn to a sharp picture; until it
+  // arrives the card picture stands in (director 2026-10-07: fetching all 40 after load, about 12 MB, held up the hero on slow phones).
   const showPicture=i=>{
     const item=items[i],big=preload(item);
+    preload(items[(i+1)%items.length]);preload(items[(i-1+items.length)%items.length]);
     view.setAttribute('aria-label',item.title);picName.textContent=item.title;picChips.replaceChildren(...item.kinds.map(kind=>Object.assign(document.createElement('span'),{className:'gallery-view-chip',textContent:kind})));
     if(big.complete&&big.naturalWidth){picImg.src=item.full;return}
     picImg.src=item.card;
@@ -405,9 +408,6 @@ document.querySelectorAll('[data-gallery]').forEach(gallery=>{
   view.addEventListener('pointerdown',event=>{if(event.pointerType!=='mouse'&&!event.target.closest('.gallery-view-arrow')){swipe={x:event.clientX,y:event.clientY};swiped=false}});
   view.addEventListener('pointerup',event=>{if(!swipe)return;const dx=event.clientX-swipe.x,dy=event.clientY-swipe.y;swipe=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){swiped=true;go(dx<0?1:-1)}});
   addEventListener('resize',()=>{if(current>=0&&!closing){pic.classList.remove('is-flying');place(fit(items[current]));fitViewSky()}});
-  // The large pictures are fetched once the page has finished loading, so the view opens sharp without slowing the page.
-  const fetchLarge=()=>items.forEach(preload);
-  if(document.readyState==='complete')fetchLarge();else addEventListener('load',fetchLarge,{once:true});
 });
 // Header (redesign 2026-10-04): the studio's place and time, Seoul.
 const studioClock=document.querySelector('[data-clock]');
