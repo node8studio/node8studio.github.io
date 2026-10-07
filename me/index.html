@@ -2,6 +2,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>내 접속 제외 — Node8 Studio</title>
 <!-- Director-only page (2026-10-07): turns Google Analytics off for this one browser. No GA block here on purpose, so opening it
      never counts; every other page reads the same localStorage key (node8-exclude) in its NODE8_GA block before GA loads.
+     Turning it on also drops this tab's kept Naver ad context (sessionStorage node8-ad).
      Not linked from the site, not in the sitemap, noindex. -->
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/Brand/%ED%8C%8C%EB%B9%84%EC%BD%984.png?v=20260930"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=20260930">
@@ -40,7 +41,7 @@ body{margin:0;background:#fff;color:var(--ink);font-family:Geist,"Pretendard Var
 const read=()=>{try{return localStorage.getItem(key)==='1'}catch(error){return null}};
 const show=()=>{const on=read();if(on===null){state.textContent='이 브라우저는 사이트 저장소를 막고 있어 설정을 저장할 수 없습니다.';button.hidden=true;return}
 document.documentElement.dataset.excluded=on?'yes':'no';state.textContent=on?'이 브라우저의 접속은 통계에서 제외되고 있습니다.':'이 브라우저의 접속은 지금 통계에 기록됩니다.';button.textContent=on?'제외 해제':'이 브라우저 제외하기';button.hidden=false};
-button.addEventListener('click',()=>{try{if(read())localStorage.removeItem(key);else localStorage.setItem(key,'1')}catch(error){}show()});
+button.addEventListener('click',()=>{try{if(read())localStorage.removeItem(key);else{localStorage.setItem(key,'1');sessionStorage.removeItem('node8-ad')}}catch(error){}show()});
 show()})();
 </script>
 </body></html>
