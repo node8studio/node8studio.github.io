@@ -1,6 +1,6 @@
 const currentScript=document.currentScript;
 const carouselScript=document.createElement('script');carouselScript.src=new URL('recent-carousel.js?v=20261007-1',currentScript.src).href;carouselScript.defer=true;document.head.appendChild(carouselScript);
-if(!document.querySelector('script[data-node8-cms]')){const cmsScript=document.createElement('script');cmsScript.src=new URL('cms-public.js?v=20261007-1',currentScript.src).href;cmsScript.defer=true;document.head.appendChild(cmsScript);}
+if(!document.querySelector('script[data-node8-cms]')){const cmsScript=document.createElement('script');cmsScript.src=new URL('cms-public.js?v=20261007-2',currentScript.src).href;cmsScript.defer=true;document.head.appendChild(cmsScript);}
 
 const footerVideo=document.querySelector('.node8-footer-media video');
 if(footerVideo){footerVideo.muted=true;if('IntersectionObserver' in window){const playObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)footerVideo.play().catch(()=>{});else footerVideo.pause()}));playObserver.observe(footerVideo)}else footerVideo.play().catch(()=>{})}
@@ -16,7 +16,27 @@ const setMenu=open=>{nav?.classList.toggle('is-open',open);menuButton?.setAttrib
 menuButton?.addEventListener('click',()=>setMenu(!nav.classList.contains('is-open')));
 menuButton?.closest('.site-header')?.addEventListener('click',event=>{if(event.target===event.currentTarget&&nav?.classList.contains('is-open'))setMenu(false)});
 addEventListener('keydown',event=>{if(event.key==='Escape'&&nav?.classList.contains('is-open')){setMenu(false);menuButton?.focus()}});
-document.querySelectorAll('.detail-film-trigger[data-youtube-id]').forEach((trigger)=>{trigger.addEventListener('click',()=>{const frame=trigger.closest('.detail-film-frame');const videoId=trigger.dataset.youtubeId;if(!frame||!videoId)return;const player=document.createElement('iframe');player.className='detail-film-embed';player.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&modestbranding=1`;player.title=trigger.getAttribute('aria-label')||'Project film';player.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';player.allowFullscreen=true;frame.replaceChildren(player)})});
+document.querySelectorAll('.detail-film-trigger[data-youtube-id]').forEach((trigger)=>{trigger.addEventListener('click',()=>{const frame=trigger.closest('.detail-film-frame');const videoId=trigger.dataset.youtubeId;if(!frame||!videoId)return;const player=document.createElement('iframe');player.className='detail-film-embed';player.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;player.title=trigger.getAttribute('aria-label')||'Project film';player.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';player.allowFullscreen=true;frame.replaceChildren(player)})});
+// Film viewing in GA4 (2026-10-07). GA's own video_start / video_progress (10·25·50·75%) / video_complete follow a film iframe with
+// enablejsapi=1 once the YouTube iframe API is on the page, but GA loads that API only for a film already there at load — the Yes24
+// film appears on click and CMS films after render — so it is loaded here (early on a page with a play button, so a film that starts
+// on click is followed from its first frame). GA counts a progress step only when playback crosses it, but video_complete also fires
+// after a drag to the end, so video_watch_time adds the seconds actually played (jumps and hidden-tab time left out), sent on pause,
+// end and when the page is hidden. Only where GA runs: not on local previews or in a browser excluded at /me/. Hero and card clips
+// are <video>, not YouTube, so they never count.
+if(typeof window.gtag==='function'&&document.body.classList.contains('project-detail')){
+  const ytReady=fn=>{if(window.YT&&YT.ready)return YT.ready(fn);const before=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{before&&before();fn()};if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';document.head.appendChild(api)}};
+  const follow=frame=>{if(frame.dataset.watch)return;frame.dataset.watch='1';if(!frame.id)frame.id='film-'+Math.random().toString(36).slice(2);ytReady(()=>{
+    const player=YT.get(frame.id)||new YT.Player(frame.id);let last=null,played=0,timer=0;
+    const tick=()=>{try{const now=player.getCurrentTime(),rate=player.getPlaybackRate()||1;if(last!==null&&!document.hidden&&now>last&&now-last<=2.5*rate)played+=now-last;last=now}catch(error){}};
+    const send=()=>{const seconds=Math.floor(played);if(seconds<1)return;played-=seconds;try{const data=player.getVideoData?.()||{},duration=player.getDuration(),now=player.getCurrentTime();gtag('event','video_watch_time',{send_to:'G-FPF9X0NRGT',video_provider:'youtube',video_id:data.video_id,video_title:data.title,video_url:data.video_id?'https://www.youtube.com/watch?v='+data.video_id:player.getVideoUrl(),video_duration:Math.round(duration),video_current_time:Math.round(now),video_percent:duration?Math.round(now/duration*100):0,watch_seconds:seconds})}catch(error){}};
+    player.addEventListener('onStateChange',event=>{clearInterval(timer);tick();last=null;if(event.data===1){tick();timer=setInterval(tick,1000)}else if(event.data!==3)send()});
+    addEventListener('pagehide',()=>{tick();send()});document.addEventListener('visibilitychange',()=>{if(document.hidden){tick();send()}});
+  })};
+  const scan=()=>document.querySelectorAll('iframe.detail-film-embed').forEach(follow);
+  if(document.querySelector('.detail-film-trigger'))ytReady(()=>{});
+  scan();new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});
+}
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-shown');observer.unobserve(entry.target)}}),{threshold:.14});
 document.querySelectorAll('.reveal').forEach(element=>observer.observe(element));
 addEventListener('load',()=>{const rail=document.querySelector('.recent-rail');const card=rail?.querySelector('.recent-card');if(rail&&card){requestAnimationFrame(()=>{const width=card.getBoundingClientRect().width;rail.scrollLeft=width+16-(rail.clientWidth-width)/2})}},{once:true});
