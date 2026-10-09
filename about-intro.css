@@ -13,21 +13,25 @@
 .intro-aside{padding-bottom:4px}
 .intro-lead{margin:0;font-size:var(--type-sub);line-height:1.7;letter-spacing:-.02em;color:#3c3c39;text-wrap:pretty}
 /* The film frame. With the script (is-held) it comes up at about half the text width, starts growing as soon as it is
-   fully in view, is held in the middle of the screen and finishes growing in the first 60% of the hold (--hold), then
-   moves on (director 2026-10-04: the growth has to read). The picture inside settles from a slight zoom as it grows.
+   fully in view, is held and finishes growing in the first part of the hold (--grow of --hold), then moves on
+   (director 2026-10-04: the growth has to read). The picture inside settles from a slight zoom as it grows.
    --p 0 → 1 from script.js; --s0 is the starting size. Without the script it simply shows at full size.
    16:9 on every screen, the ratio of the director's picture, so none of it is cut (director 2026-10-06; before, a 21:9
-   key visual cropped to 16:9 on tablets and 4:3 on phones). Across a wide screen a 16:9 frame is taller than the
-   window, so its width stops where its height leaves 24px above and below while it is held: whole on the screen.
+   key visual cropped to 16:9 on tablets and 4:3 on phones), and as wide as the hero's frame (director 2026-10-10: just
+   fill the width — it used to stop where it fitted the window's height, with a wide margin each side). Across a wide
+   screen it is then taller than the window: it is held with its top on the frame line and the rest comes up as the
+   page moves on. It grows about the middle of the screen (--a) until it fills the height, then opens sideways; where
+   it fits the window it is held in the middle as before. --s0, --hold and --grow keep the growth's pace and the rest
+   after it as they were before the frame widened.
    While it is small, the clipped-away part above it read as more empty space under the Korean line (director
    2026-10-06: too wide on every screen), so script.js pulls the stage up (--pull) until the small picture shows the
    head row's gap (.intro-head) below that line — the same space as under the picture. The stage itself lets clicks
    through where it now lies over the end of the big text; the picture is clipped for clicks as it is for the eye. */
-.intro-stage{--s0:.52;--hold:60vh;position:relative;margin:0 calc(var(--wide-inset) - var(--grid-content-inset))}
+.intro-stage{--s0:.44;--hold:76vh;--grow:.7;position:relative;margin:0 calc(var(--grid-frame-inset) - var(--grid-content-inset))}
 .intro-stage.is-held{height:calc(var(--frame-h) + var(--hold));margin-top:calc(var(--pull,0px) * -1);pointer-events:none}
-.intro-frame{--p:1;--s:calc(var(--s0) + (1 - var(--s0)) * var(--p));position:relative;max-width:calc((100vh - 48px) * 16 / 9);max-width:calc((100svh - 48px) * 16 / 9);margin:0 auto;aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius);background:#e9e8e2;clip-path:inset(calc((1 - var(--s)) * 50%) round var(--radius))}
-.is-held .intro-frame{position:sticky;top:calc(50vh - var(--frame-h) / 2);top:calc(50svh - var(--frame-h) / 2);pointer-events:auto}
-.intro-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(calc(1.12 - var(--p) * .12))}
+.intro-frame{--p:1;--s:calc(var(--s0) + (1 - var(--s0)) * var(--p));--a:min(var(--frame-h) / 2,50svh - var(--grid-frame-inset));--top:max(0px,var(--a) - var(--s) * var(--frame-h) / 2);position:relative;margin:0;aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius);background:#e9e8e2;clip-path:inset(var(--top) calc((1 - var(--s)) * 50%) calc((1 - var(--s)) * var(--frame-h) - var(--top)) round var(--radius))}
+.is-held .intro-frame{position:sticky;top:max(var(--grid-frame-inset),calc(50vh - var(--frame-h) / 2));top:max(var(--grid-frame-inset),calc(50svh - var(--frame-h) / 2));pointer-events:auto}
+.intro-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(calc(1.12 - var(--p) * .12));transform-origin:50% var(--a)}
 /* Phones (director 2026-10-06): the frame is small there, so a touch on it opens the picture large, with no button on
    the page. It fills the height of the screen and pans sideways under a finger from the middle; a phone turned
    sideways shows it whole. The close sits at the foot in the middle, where the site's round buttons are, in the Top
@@ -80,7 +84,7 @@
 .ways-cap strong{margin-right:.2em;font-weight:600;color:var(--ink)}
 .ways-cap span{font-weight:400;color:#3c3c39}
 @media(max-width:1000px){
-  .intro-stage{--s0:.56;--hold:52vh}
+  .intro-stage{--s0:.56;--hold:52vh;--grow:.6}
   .panes{flex-wrap:wrap;height:auto;row-gap:8px}
   .pane{height:clamp(380px,52vw,460px)}
 }

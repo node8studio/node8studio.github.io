@@ -76,15 +76,21 @@ if(introStage&&introFrame&&!reduceMotion){
   // The small frame's clipped part would add to the space under the Korean line: pull the stage up (--pull) until the
   // small picture sits the head row's gap below the big text (director 2026-10-06), never closer than 60% of that part
   // so the growing picture keeps clear of the line while both are on screen.
+  // As wide as the frame (director 2026-10-10), the picture is taller than a wide window: it is then held with its top
+  // on the frame line rather than in the middle, and grows about the middle of the screen (about-intro.css --a), so
+  // the small picture's place, the start and the end of the growth are all taken from that point.
   const introCopy=document.querySelector('.about-manifesto-copy'),introHead=introStage.parentElement.querySelector('.intro-head');
+  let inset=6,s0=.44,grow=.6;
+  const anchorOf=(fh,h)=>Math.min(fh/2,h/2-inset);
   const measure=()=>{
-    const fh=introFrame.offsetHeight;introStage.style.setProperty('--frame-h',`${fh}px`);
+    const fh=introFrame.offsetHeight,css=getComputedStyle(introStage);introStage.style.setProperty('--frame-h',`${fh}px`);
+    inset=parseFloat(css.getPropertyValue('--grid-frame-inset'))||6;s0=parseFloat(css.getPropertyValue('--s0'))||.44;grow=parseFloat(css.getPropertyValue('--grow'))||.6;
     if(!introCopy||!introHead)return;
-    const pulled=parseFloat(introStage.style.getPropertyValue('--pull'))||0,clipped=(1-(parseFloat(getComputedStyle(introStage).getPropertyValue('--s0'))||.52))/2*fh,gap=Math.max(parseFloat(getComputedStyle(introHead).marginTop)||0,clipped*.6);
+    const pulled=parseFloat(introStage.style.getPropertyValue('--pull'))||0,clipped=Math.max(0,anchorOf(fh,innerHeight)-s0*fh/2),gap=Math.max(parseFloat(getComputedStyle(introHead).marginTop)||0,clipped*.6);
     introStage.style.setProperty('--pull',`${Math.max(0,introStage.getBoundingClientRect().top+pulled-introCopy.getBoundingClientRect().bottom+clipped-gap).toFixed(1)}px`);
   };
   introStage.classList.add('is-held');measure();addEventListener('resize',measure);document.fonts?.ready.then(measure);
-  aboutScrubs.push(()=>{const box=introStage.getBoundingClientRect(),h=innerHeight,fh=introFrame.offsetHeight,hold=introStage.offsetHeight-fh,start=h*.8-fh/2,end=(h-fh)/2-hold*.6,t=Math.min(1,Math.max(0,(start-box.top)/Math.max(1,start-end)));introFrame.style.setProperty('--p',(t*t*(3-2*t)).toFixed(4))});
+  aboutScrubs.push(()=>{const box=introStage.getBoundingClientRect(),h=innerHeight,fh=introFrame.offsetHeight,hold=introStage.offsetHeight-fh,start=h*.8-anchorOf(fh,h),end=Math.max(inset,(h-fh)/2)-hold*grow,t=Math.min(1,Math.max(0,(start-box.top)/Math.max(1,start-end)));introFrame.style.setProperty('--p',(t*t*(3-2*t)).toFixed(4))});
 }
 if(aboutScrubs.length){let scrubFrame=0;const scrub=()=>{scrubFrame=0;aboutScrubs.forEach(update=>update())};const requestScrub=()=>{if(!scrubFrame)scrubFrame=requestAnimationFrame(scrub)};addEventListener('scroll',requestScrub,{passive:true});addEventListener('resize',requestScrub);requestScrub()}
 // About 01 on a phone (director 2026-10-06): the 16:9 frame is small there, so a touch on it opens the picture large,
