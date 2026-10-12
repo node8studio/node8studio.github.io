@@ -7,8 +7,13 @@
    01 About Node8: the film frame opens the part — it carries on the big text's centred axis, and the head row then
    stands between it and the panels, so two picture blocks never meet — then the head row (title | lead), then the
    principles as four picture panels that open sideways on a click, their caption under them. */
-.page-about{--grid-content-inset:max(clamp(20px,4.3vw,72px),calc((100vw - 1440px) / 2));--wide-inset:calc((var(--grid-frame-inset) + clamp(20px,4.3vw,72px)) / 2);--hair:rgba(19,19,19,.14)}
-.about-intro{display:block;padding-top:0;padding-bottom:clamp(96px,8.3vw,160px)}
+.page-home{--grid-content-inset:max(clamp(20px,4.3vw,72px),calc((100vw - 1440px) / 2));--wide-inset:calc((var(--grid-frame-inset) + clamp(20px,4.3vw,72px)) / 2);--hair:rgba(19,19,19,.14)}
+/* On the main page since 2026-10-12 (director: About joined the main page). The film frame follows the big text under
+   the hero (.about-reel); the head row and the principles are 04 after What We Make (.about-who), spaced like the other
+   numbered parts. */
+.about-intro{display:block}
+.about-reel{padding-top:0;padding-bottom:0}
+.about-who{padding-top:clamp(64px,6.25vw,120px);padding-bottom:clamp(120px,13.5vw,260px)}
 .intro-title{margin:0;font-size:var(--type-statement);line-height:1.22;letter-spacing:-.035em;font-weight:700}
 .intro-aside{padding-bottom:4px}
 .intro-lead{margin:0;font-size:var(--type-sub);line-height:1.7;letter-spacing:-.02em;color:#3c3c39;text-wrap:pretty}
@@ -43,7 +48,7 @@
 .intro-viewer-pan img{flex:none;display:block;width:auto;max-width:none;height:100%;margin:auto;user-select:none;-webkit-user-drag:none}
 .intro-viewer-close{position:absolute;left:calc(50% - 22px);bottom:16px;display:grid;place-items:center;width:44px;height:44px;margin:0;padding:0;border:1px solid #bdbdbd;border-radius:999px;background:rgba(255,255,255,.88);color:var(--ink);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .intro-viewer-close svg{display:block;width:14px;height:14px}
-.intro-head{margin-top:clamp(96px,8.3vw,160px)}
+
 /* Principles as panels that open sideways (director 2026-10-04, after looking at click-to-open components: the list
    read bare and flat). Four pictures side by side across the text width; the open one takes most of the row and carries
    its title and two lines on its picture (short loops later — a video in a panel plays only while it is open), the

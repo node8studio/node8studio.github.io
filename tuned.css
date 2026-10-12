@@ -7,7 +7,6 @@
 :root:not(.node8-tuning) [data-tune-id="recent-label"]{font-size:16px!important;font-weight:500!important;letter-spacing:1.28px!important}
 :root:not(.node8-tuning) [data-tune-id="footer-title"]{font-size:min(198px, calc(198 * var(--tune-fit)))!important;letter-spacing:max(-8.2px, calc(-8.2 * var(--tune-fit)))!important}
 [data-tune-id="footer-title"]{--tune-fit:calc((100vw - 24px - 2 * clamp(20px, 2.8vw, 40px)) / 1816)}
-:root:not(.node8-tuning) [data-tune-id="about-hero-title"]{font-weight:600!important;letter-spacing:-2.6px!important}
 :root:not(.node8-tuning) [data-tune-id="footer-media"]{translate:12px 0px!important;width:509px!important}
 :root:not(.node8-tuning) [data-tune-id="about-manifesto-label"]{font-size:16px!important}
 :root:not(.node8-tuning) [data-tune-id="footer-address"]{font-size:16px!important}

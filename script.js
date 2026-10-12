@@ -75,18 +75,19 @@ const introStage=document.querySelector('[data-stage]'),introFrame=introStage?.q
 if(introStage&&introFrame&&!reduceMotion){
   // The small frame's clipped part would add to the space under the Korean line: pull the stage up (--pull) until the
   // small picture sits the head row's gap below the big text (director 2026-10-06), never closer than 60% of that part
-  // so the growing picture keeps clear of the line while both are on screen.
+  // so the growing picture keeps clear of the line while both are on screen. On the main page (2026-10-12) the next
+  // part's head row follows the picture, so that gap is the space from the picture's foot to the row's hairline.
   // As wide as the frame (director 2026-10-10), the picture is taller than a wide window: it is then held with its top
   // on the frame line rather than in the middle, and grows about the middle of the screen (about-intro.css --a), so
   // the small picture's place, the start and the end of the growth are all taken from that point.
-  const introCopy=document.querySelector('.about-manifesto-copy'),introHead=introStage.parentElement.querySelector('.intro-head');
+  const introCopy=document.querySelector('.about-manifesto-copy'),introHead=introStage.closest('section')?.nextElementSibling?.querySelector('.head-row');
   let inset=6,s0=.44,grow=.6;
   const anchorOf=(fh,h)=>Math.min(fh/2,h/2-inset);
   const measure=()=>{
     const fh=introFrame.offsetHeight,css=getComputedStyle(introStage);introStage.style.setProperty('--frame-h',`${fh}px`);
     inset=parseFloat(css.getPropertyValue('--grid-frame-inset'))||6;s0=parseFloat(css.getPropertyValue('--s0'))||.44;grow=parseFloat(css.getPropertyValue('--grow'))||.6;
     if(!introCopy||!introHead)return;
-    const pulled=parseFloat(introStage.style.getPropertyValue('--pull'))||0,clipped=Math.max(0,anchorOf(fh,innerHeight)-s0*fh/2),gap=Math.max(parseFloat(getComputedStyle(introHead).marginTop)||0,clipped*.6);
+    const pulled=parseFloat(introStage.style.getPropertyValue('--pull'))||0,clipped=Math.max(0,anchorOf(fh,innerHeight)-s0*fh/2),gap=Math.max(introHead.getBoundingClientRect().top-introStage.getBoundingClientRect().bottom,clipped*.6);
     introStage.style.setProperty('--pull',`${Math.max(0,introStage.getBoundingClientRect().top+pulled-introCopy.getBoundingClientRect().bottom+clipped-gap).toFixed(1)}px`);
   };
   introStage.classList.add('is-held');measure();addEventListener('resize',measure);document.fonts?.ready.then(measure);

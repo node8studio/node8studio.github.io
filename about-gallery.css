@@ -20,7 +20,7 @@
 .gallery-frame{--u:clamp(.5px,calc(100vw / 1920),1px);position:relative;isolation:isolate;height:calc(100vh - var(--gallery-inset) * 2);height:calc(100svh - var(--gallery-inset) * 2);min-height:520px;max-height:min(1080px,calc(var(--tile-h) * var(--u) * .85));margin-inline:calc(var(--gallery-inset) - var(--grid-content-inset));overflow:hidden;overflow:clip;border:1px solid var(--space);border-radius:var(--radius);background:var(--space)}
 /* The night of the frame and of the large view (the view hangs from the page, so the colour sits on it). The star
    canvases are stretched to their box; script.js draws them at the screen's pixel density. */
-.page-about{--space:#06070a}
+.page-home{--space:#06070a}
 .gallery-stars,.gallery-view-stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .gallery-stars{z-index:-1}
 /* "Node8" alone (director 2026-10-04), white on the night (2026-10-05 — the black file inverted); the layout keeps the

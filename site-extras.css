@@ -109,14 +109,6 @@ html,body{max-width:100%;overflow-x:clip}.node8-footer,.node8-footer-shell,.node
 
 .node8-footer-mark{display:none}.node8-footer-socials{display:flex!important;flex-flow:row nowrap!important;align-items:center;gap:32px;white-space:nowrap}.node8-footer-socials a{display:block;flex:none;white-space:nowrap;font-size:18px;line-height:23px;letter-spacing:-.54px}@media(max-width:720px){.node8-footer-socials{gap:20px}.node8-footer-socials a{font-size:16px;letter-spacing:-.48px}}
 
-/* about-hero.css */
-.about-services-hero{min-height:calc(100svh - 12px);margin:6px;border-radius:12px}.about-services-hero::after{background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.03) 58%,rgba(0,0,0,.28))}.about-services-hero .hero-media{animation:none}.about-services-hero .hero-content{inset:auto 34px 20px;display:block}.hero.about-services-hero h1{margin:0;color:#fff;font-size:64px;font-weight:600;letter-spacing:-.04em;line-height:1;white-space:nowrap}
-/* Tablet keeps the PC line but shrinks it when the frame is too narrow for 64px (the line is 11.55 × the font size). */
-@media(min-width:721px) and (max-width:1000px){.hero.about-services-hero h1{font-size:min(64px,calc((100vw - 80px) / 11.8))}}
-/* Phone shows the title too (director 2026-10-03): one word a line, bottom left. The frame fills the screen as on the
-   main page and tablet (director 2026-10-05; it was a short 44svh band). */
-@media(max-width:720px){.about-services-hero{min-height:calc(100svh - 12px);margin:6px;border-radius:12px}.about-services-hero .hero-content{inset:auto 20px 18px}.hero.about-services-hero h1{font-size:40px;line-height:1.02;white-space:normal}}
-
 /* about-direction.css */
 .about-manifesto{
   display:grid;
@@ -325,31 +317,46 @@ html,body{max-width:100%;overflow-x:clip}.node8-footer,.node8-footer-shell,.node
 }
 
 /* home-intro.css */
-/* Home M3 (bundle 5): "Heart first, then technology. Bold, original stories." as a centred title card
-   between the numbers and the work slider. Sizes come from type-scale.css: the English lines use Title and
-   shrink only when a line would not fit the column; the Korean line uses Sub. The two English lines, the
-   Korean line and the link rise in turn (motion.css). Phone keeps three English lines (tune-br-m). */
-.home-intro{display:grid;grid-template-columns:minmax(0,1fr);gap:0;justify-items:center;align-content:center;text-align:center;min-height:min(78vh,820px);padding-block:clamp(96px,10vw,168px)}
+/* Home band between the work slider and What We Make (director 2026-10-12, when About joined the main page; it was
+   the "Heart first" title card). The big text under the hero speaks for the films, so this one speaks for brand work:
+   "The one shot a brand / is remembered by." / "한 컷으로 기억되는 브랜드를 만듭니다."
+   A black panel, inset like the hero's frame, with white type (director: the light grey read careless) at 500 — white on
+   black reads a step heavier, and 500 matches the big text under the hero (director 2026-10-12). Two lines on
+   every screen with a small 4:3 picture set in among the words like a word of its own — after "shot", the shot itself,
+   and at the head of the second line, so the two sit across from each other (director's references: Framer inline
+   text images). Room above and below it is about two thirds of the space between two parts (director 2026-10-12:
+   it sat too close). The pictures will be the director's short loops. The English is bigger than the part titles: the
+   pictures take the type's height, and at the title size they would read as specks. It fits the column on narrow
+   screens (10.6 em: the longer line with its picture is about 10.3). */
+.home-intro{display:grid;grid-template-columns:minmax(0,1fr);gap:0;justify-items:center;align-content:center;text-align:center;margin:clamp(24px,5.5vw,104px) var(--grid-frame-inset) clamp(56px,7.5vw,144px);padding:clamp(96px,9.4vw,180px) 20px;border-radius:var(--radius);background:var(--ink);color:#fff}
 .home-intro>div{display:grid;justify-items:center}
-.home-intro .intro-copy{margin:0;max-width:none;white-space:nowrap;font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 12.5));line-height:1.04;letter-spacing:-.045em;font-weight:600}
+.home-intro .intro-copy{margin:0;max-width:none;white-space:nowrap;font-size:min(clamp(36px,7vw,92px),calc((100vw - 2 * var(--grid-frame-inset) - 40px) / 10.6));line-height:1.08;letter-spacing:-.045em;font-weight:500}
 .home-intro .intro-line{display:block}
-.home-intro .intro-subcopy{margin:30px 0 0;font-size:var(--type-sub);line-height:1.55;font-weight:400;color:#3c3c39}
-/* The About link is an outline pill (director 2026-10-03); it fills violet on hover and the arrow steps up-right. At rest
-   the type is black and a step bolder (director 2026-10-04, version 02 of two), the outline light grey (--pill-line in
-   section-head.css: black read heavy). */
-.home-intro .under-link{gap:10px;margin-top:40px;padding:13px 24px;border:1px solid var(--pill-line,rgba(19,19,19,.3));border-radius:999px;color:var(--ink);font-weight:600;letter-spacing:-.01em;transition:background-color .6s var(--node8-ease),border-color .6s var(--node8-ease),color .6s var(--node8-ease)}
-.home-intro .under-link span{display:inline-block;transition:transform .6s var(--node8-ease)}
-.home-intro .under-link:hover{gap:10px;border-color:var(--node8-violet);background:var(--node8-violet);color:#fff}
-.home-intro .under-link:hover span{transform:translate(3px,-3px)}
-.home-intro .under-link:focus-visible{outline:2px solid var(--node8-violet);outline-offset:3px}
-/* Tablet: a tall portrait screen made the card 820px around a 56px title — about 380px empty above and below, as much as
-   on a 1920 monitor at half the width. Capped so the rhythm matches 1024 (director 2026-10-05). */
-@media(min-width:721px) and (max-width:1000px){
-  .home-intro{min-height:min(78vh,560px)}
-}
+/* The Korean line takes the size of the one under the big text (director 2026-10-12: it read smaller), a step lighter
+   and with the site's sub-text spacing: white on black read heavier and tighter. */
+.home-intro .intro-subcopy{margin:clamp(28px,2.5vw,48px) 0 0;font-size:clamp(18px,1.45vw,22px);line-height:1.5;font-weight:400;letter-spacing:-.02em;color:rgba(255,255,255,.72)}
+/* The picture stands on the baseline about as tall as the capitals and keeps a word's space after it (one space
+   before it comes from the text). */
+.band-media{display:inline-block;width:1.04em;height:.78em;margin-right:.26em;overflow:hidden;vertical-align:-.04em;border-radius:.1em;background:#2a2a28}
+.band-media img,.band-media video{display:block;width:100%;height:100%;object-fit:cover}
+/* As the lines come up, each picture opens sideways between its words, the words making room for it, and the picture
+   settles from a slight zoom — the shot first, the second line's picture .45 s later (director 2026-10-12) — (once; without the script or with reduced motion it simply shows). */
+.home-band.rise-ready .band-media{width:0;margin-right:0}
+.home-band.rise-ready .band-media img,.home-band.rise-ready .band-media video{transform:scale(1.3)}
+.home-band.rise-ready.rise-in .band-media{width:1.04em;margin-right:.26em;transition:width 1.2s var(--node8-ease),margin-right 1.2s var(--node8-ease);transition-delay:calc(.5s + var(--m,0) * .45s)}
+.home-band.rise-ready.rise-in .band-media img,.home-band.rise-ready.rise-in .band-media video{transform:none;transition:transform 1.6s var(--node8-ease);transition-delay:calc(.5s + var(--m,0) * .45s)}
+/* The shot after "shot" sits a little tilted, like a print laid on the line (director 2026-10-12). As its place opens
+   it shows from its middle outward to every edge, already at its tilt (director 2026-10-12; a sway read awkward,
+   then a drop from above was tried). The picture at the head of the second line only opens. */
+.band-media--tilt{rotate:-5deg;margin-left:.06em;margin-right:.32em}
+.home-band.rise-ready .band-media--tilt{margin-left:0}
+.home-band.rise-ready.rise-in .band-media--tilt{margin-left:.06em;margin-right:.32em;transition:width 1.2s var(--node8-ease),margin 1.2s var(--node8-ease);transition-delay:.5s}
+.home-band.rise-ready.rise-in .band-media--tilt{animation:band-open 1.1s var(--node8-ease) .5s both}
+@keyframes band-open{from{clip-path:inset(50% 50% round .1em)}to{clip-path:inset(0 round .1em)}}
+@media(prefers-reduced-motion:reduce){.home-band.rise-ready.rise-in .band-media--tilt{animation:none}}
 @media(max-width:720px){
-  .home-intro{min-height:auto;padding-block:120px 80px}
-  .home-intro .intro-copy{font-size:min(var(--type-title),calc((100vw - 2 * var(--pad)) / 9.6))}
+  .home-intro{margin-bottom:56px;padding-block:80px;border-radius:15px}
+  .home-intro .intro-subcopy{margin-top:20px;font-size:18px}
 }
 
 /* recent-stack.css */
@@ -566,8 +573,13 @@ body{font-family:Geist,"Pretendard Variable",-apple-system,BlinkMacSystemFont,"A
    01 About Node8: the film frame opens the part — it carries on the big text's centred axis, and the head row then
    stands between it and the panels, so two picture blocks never meet — then the head row (title | lead), then the
    principles as four picture panels that open sideways on a click, their caption under them. */
-.page-about{--grid-content-inset:max(clamp(20px,4.3vw,72px),calc((100vw - 1440px) / 2));--wide-inset:calc((var(--grid-frame-inset) + clamp(20px,4.3vw,72px)) / 2);--hair:rgba(19,19,19,.14)}
-.about-intro{display:block;padding-top:0;padding-bottom:clamp(96px,8.3vw,160px)}
+.page-home{--grid-content-inset:max(clamp(20px,4.3vw,72px),calc((100vw - 1440px) / 2));--wide-inset:calc((var(--grid-frame-inset) + clamp(20px,4.3vw,72px)) / 2);--hair:rgba(19,19,19,.14)}
+/* On the main page since 2026-10-12 (director: About joined the main page). The film frame follows the big text under
+   the hero (.about-reel); the head row and the principles are 04 after What We Make (.about-who), spaced like the other
+   numbered parts. */
+.about-intro{display:block}
+.about-reel{padding-top:0;padding-bottom:0}
+.about-who{padding-top:clamp(64px,6.25vw,120px);padding-bottom:clamp(120px,13.5vw,260px)}
 .intro-title{margin:0;font-size:var(--type-statement);line-height:1.22;letter-spacing:-.035em;font-weight:700}
 .intro-aside{padding-bottom:4px}
 .intro-lead{margin:0;font-size:var(--type-sub);line-height:1.7;letter-spacing:-.02em;color:#3c3c39;text-wrap:pretty}
@@ -602,7 +614,7 @@ body{font-family:Geist,"Pretendard Variable",-apple-system,BlinkMacSystemFont,"A
 .intro-viewer-pan img{flex:none;display:block;width:auto;max-width:none;height:100%;margin:auto;user-select:none;-webkit-user-drag:none}
 .intro-viewer-close{position:absolute;left:calc(50% - 22px);bottom:16px;display:grid;place-items:center;width:44px;height:44px;margin:0;padding:0;border:1px solid #bdbdbd;border-radius:999px;background:rgba(255,255,255,.88);color:var(--ink);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .intro-viewer-close svg{display:block;width:14px;height:14px}
-.intro-head{margin-top:clamp(96px,8.3vw,160px)}
+
 /* Principles as panels that open sideways (director 2026-10-04, after looking at click-to-open components: the list
    read bare and flat). Four pictures side by side across the text width; the open one takes most of the row and carries
    its title and two lines on its picture (short loops later — a video in a panel plays only while it is open), the
@@ -775,7 +787,7 @@ body{font-family:Geist,"Pretendard Variable",-apple-system,BlinkMacSystemFont,"A
 .gallery-frame{--u:clamp(.5px,calc(100vw / 1920),1px);position:relative;isolation:isolate;height:calc(100vh - var(--gallery-inset) * 2);height:calc(100svh - var(--gallery-inset) * 2);min-height:520px;max-height:min(1080px,calc(var(--tile-h) * var(--u) * .85));margin-inline:calc(var(--gallery-inset) - var(--grid-content-inset));overflow:hidden;overflow:clip;border:1px solid var(--space);border-radius:var(--radius);background:var(--space)}
 /* The night of the frame and of the large view (the view hangs from the page, so the colour sits on it). The star
    canvases are stretched to their box; script.js draws them at the screen's pixel density. */
-.page-about{--space:#06070a}
+.page-home{--space:#06070a}
 .gallery-stars,.gallery-view-stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .gallery-stars{z-index:-1}
 /* "Node8" alone (director 2026-10-04), white on the night (2026-10-05 — the black file inverted); the layout keeps the
@@ -896,7 +908,6 @@ body{font-family:Geist,"Pretendard Variable",-apple-system,BlinkMacSystemFont,"A
 :root:not(.node8-tuning) [data-tune-id="recent-label"]{font-size:16px!important;font-weight:500!important;letter-spacing:1.28px!important}
 :root:not(.node8-tuning) [data-tune-id="footer-title"]{font-size:min(198px, calc(198 * var(--tune-fit)))!important;letter-spacing:max(-8.2px, calc(-8.2 * var(--tune-fit)))!important}
 [data-tune-id="footer-title"]{--tune-fit:calc((100vw - 24px - 2 * clamp(20px, 2.8vw, 40px)) / 1816)}
-:root:not(.node8-tuning) [data-tune-id="about-hero-title"]{font-weight:600!important;letter-spacing:-2.6px!important}
 :root:not(.node8-tuning) [data-tune-id="footer-media"]{translate:12px 0px!important;width:509px!important}
 :root:not(.node8-tuning) [data-tune-id="about-manifesto-label"]{font-size:16px!important}
 :root:not(.node8-tuning) [data-tune-id="footer-address"]{font-size:16px!important}
